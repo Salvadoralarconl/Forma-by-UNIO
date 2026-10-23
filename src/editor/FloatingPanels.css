@@ -5,5 +5,5 @@
 .workspace-dock.floating-workspace-panel:focus-within{z-index:310}
 .panel-drag-preview{position:fixed;inset:0;z-index:1000;pointer-events:none;font:11px 'Segoe UI',sans-serif;color:#dce8fc}
 .panel-drag-ghost{position:absolute;width:260px;height:80px;padding:10px;background:#353535dd;border:1px solid #6c96d4;border-radius:4px;box-shadow:0 5px 18px #0005}
-.panel-drop-target{position:absolute;top:70px;bottom:32px;width:140px;display:flex;align-items:center;justify-content:center;border:1px dashed #6c96d4;background:#548eef12;border-radius:4px}
-.panel-drop-left{left:10px}.panel-drop-right{right:10px}.panel-drop-target.active{background:#548eef40;border-style:solid}
+.panel-drop-target{position:absolute;display:flex;align-items:center;justify-content:center;border:1px dashed #6c96d4;background:#548eef12;border-radius:4px}
+.panel-drop-target.active{background:#548eef40;border-style:solid}
