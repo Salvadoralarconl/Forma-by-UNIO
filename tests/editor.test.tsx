@@ -21,6 +21,13 @@ function memoryPlatform(): Platform & { disk: Project | null; recovery: Recovery
 }
 
 describe('editor foundation', () => {
+  it('uses the current persistence adapter for recovery after a live update',async()=>{
+    const p=createProject('Live update'),first=memoryPlatform(),second=memoryPlatform();
+    const {result,rerender}=renderHook(({platform})=>useEditor(platform,p),{initialProps:{platform:first}});
+    await act(async()=>{await Promise.resolve();});rerender({platform:second});
+    act(()=>result.current.run({type:'update',id:p.pages[0].rootId,patch:{name:'Updated root'}}));
+    await waitFor(()=>expect(second.recovery?.project.nodes[p.pages[0].rootId].name).toBe('Updated root'),{timeout:3000});expect(first.recovery).toBeNull();
+  });
   it('returns active page and selection to Home when undo removes the current page',async()=>{
     const p=createProject('Studio'),platform=memoryPlatform();const {result}=renderHook(()=>useEditor(platform,p));
     act(()=>result.current.run({type:'addPage',name:'Second'}));expect(result.current.pageId).toBe(result.current.project.pages[1].id);

@@ -72,7 +72,8 @@ export function useEditor(platform: Platform, initialProject: Project) {
 
   current.current = { project, path, dirty, fingerprint, busy };
 
-  const queue = useRef(new RecoveryQueue(snapshot => platform.writeRecovery(snapshot)));
+  const persistence=useRef(platform);persistence.current=platform;
+  const queue = useRef(new RecoveryQueue(snapshot => persistence.current.writeRecovery(snapshot)));
 
   const operationLock = useRef(false);
 

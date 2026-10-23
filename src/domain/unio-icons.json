@@ -633,5 +633,199 @@
       "filled-open",
       ""
     ]
+  },
+  {
+    "id": "unio-filter-funnel-rounded",
+    "name": "Filter rounded",
+    "style": "rounded",
+    "paths": [
+      "M4 4H20Q22 4 20.5 6L15 12V18Q15 19 14 19.5L10 21V12L3.5 6Q2 4 4 4Z"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "fills": [
+      false
+    ],
+    "tags": [
+      "filter",
+      "filters",
+      "rounded",
+      "round",
+      "search",
+      "refine",
+      "sort",
+      "funnel"
+    ]
+  },
+  {
+    "id": "unio-filter-filled-rounded",
+    "name": "Filter filled rounded",
+    "style": "rounded",
+    "paths": [
+      "M4 4H20Q22 4 20.5 6L15 12V18Q15 19 14 19.5L10 21V12L3.5 6Q2 4 4 4Z"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "fills": [
+      true
+    ],
+    "tags": [
+      "filter",
+      "filters",
+      "rounded",
+      "round",
+      "search",
+      "refine",
+      "sort",
+      "filled"
+    ]
+  },
+  {
+    "id": "unio-filter-lines-rounded",
+    "name": "Filter lines rounded",
+    "style": "rounded",
+    "paths": [
+      "M3 5H21 M6 12H18 M10 19H14"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "fills": [
+      false
+    ],
+    "tags": [
+      "filter",
+      "filters",
+      "rounded",
+      "round",
+      "search",
+      "refine",
+      "sort",
+      "lines"
+    ]
+  },
+  {
+    "id": "unio-filter-sliders-rounded",
+    "name": "Filter sliders rounded",
+    "style": "rounded",
+    "paths": [
+      "M3 6H7 M11 6H21 M3 18H13 M17 18H21",
+      "M9 3Q7 3 7 5V7Q7 9 9 9Q11 9 11 7V5Q11 3 9 3Z M15 15Q13 15 13 17V19Q13 21 15 21Q17 21 17 19V17Q17 15 15 15Z"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "fills": [
+      false,
+      false
+    ],
+    "tags": [
+      "filter",
+      "filters",
+      "rounded",
+      "round",
+      "search",
+      "refine",
+      "sort",
+      "sliders"
+    ]
+  },
+  {
+    "id": "unio-filter-vertical-rounded",
+    "name": "Filter vertical sliders rounded",
+    "style": "rounded",
+    "paths": [
+      "M6 3V7 M6 11V21 M18 3V13 M18 17V21",
+      "M3 9Q3 7 5 7H7Q9 7 9 9Q9 11 7 11H5Q3 11 3 9Z M15 15Q15 13 17 13H19Q21 13 21 15Q21 17 19 17H17Q15 17 15 15Z"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "fills": [
+      false,
+      false
+    ],
+    "tags": [
+      "filter",
+      "filters",
+      "rounded",
+      "round",
+      "search",
+      "refine",
+      "sort",
+      "vertical"
+    ]
+  },
+  {
+    "id": "unio-filter-active-rounded",
+    "name": "Filter active rounded",
+    "style": "rounded",
+    "paths": [
+      "M4 4H20Q22 4 20.5 6L14 12V17Q14 18 13 18.5L10 20V12L3.5 6Q2 4 4 4Z",
+      "M17 18L19 20L22 16"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "fills": [
+      false,
+      false
+    ],
+    "tags": [
+      "filter",
+      "filters",
+      "rounded",
+      "round",
+      "search",
+      "refine",
+      "sort",
+      "active"
+    ]
+  },
+  {
+    "id": "unio-filter-add-rounded",
+    "name": "Add filter rounded",
+    "style": "rounded",
+    "paths": [
+      "M4 4H20Q22 4 20.5 6L14 12V17Q14 18 13 18.5L10 20V12L3.5 6Q2 4 4 4Z",
+      "M19 16V22 M16 19H22"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "fills": [
+      false,
+      false
+    ],
+    "tags": [
+      "filter",
+      "filters",
+      "rounded",
+      "round",
+      "search",
+      "refine",
+      "sort",
+      "add"
+    ]
+  },
+  {
+    "id": "unio-filter-clear-rounded",
+    "name": "Clear filter rounded",
+    "style": "rounded",
+    "paths": [
+      "M4 4H20Q22 4 20.5 6L14 12V17Q14 18 13 18.5L10 20V12L3.5 6Q2 4 4 4Z",
+      "M17 17L22 22 M22 17L17 22"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "fills": [
+      false,
+      false
+    ],
+    "tags": [
+      "filter",
+      "filters",
+      "rounded",
+      "round",
+      "search",
+      "refine",
+      "sort",
+      "clear"
+    ]
   }
 ]
