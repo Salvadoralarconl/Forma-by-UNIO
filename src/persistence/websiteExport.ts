@@ -11,6 +11,7 @@ import shapeSource from '../editor/ShapeVector.tsx?raw';
 import shapesSource from '../domain/shapes.ts?raw';
 import modelSource from '../domain/model.ts?raw';
 import pageBoundsSource from '../domain/pageBounds.ts?raw';
+import pageBackgroundSource from '../editor/PageBackground.tsx?raw';
 import iconSource from '../domain/iconPacks.ts?raw';
 import license from '../domain/icon-license.txt?raw';
 import attribution from '../../docs/icon-sources.json?raw';
@@ -27,7 +28,7 @@ export function websiteExportFiles(input:Project):Record<string,Uint8Array>{
  add('site.css',styles);
  // Public files are served at / in Vite, but the standalone preview uses public/assets.
  add('src/export/Site.tsx',siteSource.replace('`public/assets/','`assets/'));
- add('src/export/nodeStyle.ts',styleSource);add('src/editor/ShapeVector.tsx',shapeSource);add('src/domain/shapes.ts',shapesSource);add('src/domain/model.ts',modelSource);add('src/domain/pageBounds.ts',pageBoundsSource);add('src/domain/iconPacks.ts',iconSource);
+ add('src/export/nodeStyle.ts',styleSource);add('src/editor/ShapeVector.tsx',shapeSource);add('src/editor/PageBackground.tsx',pageBackgroundSource);add('src/domain/shapes.ts',shapesSource);add('src/domain/model.ts',modelSource);add('src/domain/pageBounds.ts',pageBoundsSource);add('src/domain/iconPacks.ts',iconSource);
  add('src/site.css',styles);add('src/project.json',JSON.stringify(data,null,2));
  add('src/main.tsx',"import React from 'react';\nimport {createRoot} from 'react-dom/client';\nimport {Site} from './export/Site';\nimport project from './project.json';\nimport type {Project} from './domain/model';\nimport './site.css';\ncreateRoot(document.getElementById('root')!).render(<Site project={project as Project}/>);\n");
  add('index.html','<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Website</title></head><body><div id="root"></div><script type="module" src="/src/main.tsx"></script></body></html>');

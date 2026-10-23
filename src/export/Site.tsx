@@ -2,6 +2,7 @@ import type {Project, DesignNode} from '../domain/model';
 import {ShapeVector} from '../editor/ShapeVector';
 import {nodeStyle} from './nodeStyle';
 import {fixedPageHeight} from '../domain/pageBounds';
+import {PageBackground} from '../editor/PageBackground';
 
 export function assetPath(id:string,mime:string){return `public/assets/${id}.${mime.split('/')[1]}`;}
 export function buttonCss(project:Project){
@@ -19,7 +20,8 @@ export function Site({project}:{project:Project}){
  const pageForNode=(target:string)=>project.pages.find(page=>{const visit=(id:string):boolean=>id===target||project.nodes[id].children.some(visit);return visit(page.rootId);});
  const render=(id:string,parent?:DesignNode):React.ReactNode=>{
   const n=project.nodes[id];
-  const props={id:`node-${id}`,'data-node-id':id,'data-kind':n.kind,style:{...nodeStyle(n,parent),...(n.layoutMode==='free'?{overflow:'hidden'}:{} )},className:n.button?'design-node semantic-button':'design-node'};
+  const pageBackground=project.pages.find(p=>p.rootId===id)?.background;
+  const props={id:`node-${id}`,'data-node-id':id,'data-kind':n.kind,style:{...nodeStyle(n,parent),...(pageBackground?{background:'transparent'}:{}),...(n.layoutMode==='free'?{overflow:'hidden'}:{} )},className:n.button?'design-node semantic-button':'design-node'};
   if(n.kind==='shape')return <ShapeVector key={id} node={n} props={props}/>;
   if(n.kind==='icon')return <svg key={id} {...props} style={{...props.style,border:undefined}} role="img" aria-label={n.name} viewBox={(n.iconViewBox??[0,0,24,24]).join(' ')}>{n.iconPaths?.map((d,i)=>{const p=n.iconPaint?.[i];return <path key={i} d={d} fill={n.iconFills?.[i]?n.style.background??'#242a35':'none'} stroke={n.iconFills?.[i]?'none':n.style.background??'#242a35'} strokeWidth={n.style.borderWidth??p?.width??2} strokeDasharray={n.style.lineStyle==='dashed'?'3 2':n.style.lineStyle==='dotted'?'.1 2':undefined} strokeLinecap={p?.cap??'round'} strokeLinejoin={p?.join??'round'} fillRule={p?.rule??'evenodd'}/>;})}</svg>;
   if(n.kind==='image'){const a=project.assets[n.assetId!];return <img key={id} {...props} src={assetPath(a.id,a.mime)} alt={n.alt??''}/>;}
@@ -33,7 +35,7 @@ export function Site({project}:{project:Project}){
   }
   return <div key={id} {...props}>{children}</div>;
  };
- return <main>{project.pages.filter(p=>!p.archived).map(p=><section id={`page-${p.id}`} key={p.id} aria-label={p.name} style={{width:p.width??1440,height:fixedPageHeight(project,p.rootId),overflow:'hidden'}}>{render(p.rootId)}</section>)}</main>;
+ return <main>{project.pages.filter(p=>!p.archived).map(p=><section id={`page-${p.id}`} key={p.id} aria-label={p.name} style={{position:'relative',width:p.width??1440,height:fixedPageHeight(project,p.rootId),overflow:'hidden'}}>{p.background&&<PageBackground background={p.background} imageUrl={p.background.assetId?assetPath(p.background.assetId,project.assets[p.background.assetId].mime):undefined} fallbackColor={project.nodes[p.rootId].style.background}/>}{render(p.rootId)}</section>)}</main>;
 }
 
 

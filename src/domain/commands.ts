@@ -1,4 +1,4 @@
-import { type Asset, type DesignNode, type NodeStyle, type Project, makeNode, newId, parentOf, validateProject } from './model';
+import { type Asset, type DesignNode, type NodeStyle, type Project,type PageBackground, makeNode, newId, parentOf, validateProject } from './model';
 
 import { mergeShapeGeometry, type ShapeGeometry } from './shapes';
 
@@ -14,6 +14,7 @@ import {localIconSchema,type LocalIcon} from './iconPacks';
 import {setSurroundingGap,type SpacingSide} from './spacing';
 import {alignedFrames,freeSelection,unionBounds,initialFrameSize,type Frame,type Alignment} from './placement';
 export type Command =
+ | {type:'pageBackground';id:string;background:Partial<PageBackground>;asset?:Asset}
  | {type:'resizePageWidth';id:string;width:number}
  | {type:'spacing';id:string;side:SpacingSide;gap:number}
  | {type:'resizePage';id:string;height:number}
@@ -53,13 +54,14 @@ export function applyCommand(project: Project, command: Command): Project {
 
   const node = 'id' in command ? p.nodes[command.id] : undefined;
 
-  if ('id' in command && !['renamePage','deletePage','archivePage','movePage','resizePage','duplicatePage','resizePageWidth'].includes(command.type) && !node) throw new Error('Layer no longer exists.');
+  if ('id' in command && !['pageBackground','renamePage','deletePage','archivePage','movePage','resizePage','duplicatePage','resizePageWidth'].includes(command.type) && !node) throw new Error('Layer no longer exists.');
   const targets=[node,...('parentId' in command?[p.nodes[command.parentId]]:[])];
   for(const target of targets){if(target){let ancestor=parentOf(p,target.id);while(ancestor){if(ancestor.locked)throw new Error('Unlock the page or parent before editing its contents.');ancestor=parentOf(p,ancestor.id);}}}
 
   if (node?.locked && command.type !== 'update') throw new Error('Unlock this layer before editing it.');
 
   switch (command.type) {
+    case 'pageBackground': {const page=p.pages.find(page=>page.id===command.id);if(!page||p.nodes[page.rootId].locked)throw new Error('Choose an unlocked page.');if(command.asset)p.assets[command.asset.id]=command.asset;page.background={...page.background,...command.background};p.schemaVersion=2;break;}
     case 'resizePageWidth': {const page=p.pages.find(page=>page.id===command.id);if(!page||p.nodes[page.rootId].locked||!Number.isFinite(command.width)||command.width<240||command.width>5000)throw new Error('Choose an unlocked page and width 240–5000.');page.width=command.width;break;}
     case 'duplicatePage': {
       const index=p.pages.findIndex(page=>page.id===command.id),source=p.pages[index];if(!source)throw new Error('Page no longer exists.');
@@ -315,6 +317,7 @@ export function applyCommand(project: Project, command: Command): Project {
   }
 
   const referencedAssets = new Set(Object.values(p.nodes).filter(n => n.kind === 'image').map(n => n.assetId));
+  for(const page of p.pages)if(page.background?.assetId)referencedAssets.add(page.background.assetId);
 
   for (const assetId of Object.keys(p.assets)) if (!referencedAssets.has(assetId)) delete p.assets[assetId];
 

@@ -116,6 +116,8 @@ const nodeSchema = z.object({
 }).strict();
 
 export type DesignNode = z.infer<typeof nodeSchema>;
+export const pageBackgroundSchema=z.object({color:color.optional(),assetId:id.optional(),opacity:z.number().min(0).max(1).optional(),fit:z.enum(['cover','contain','stretch']).optional(),position:z.enum(['center','top','bottom','left','right','top left','top right','bottom left','bottom right']).optional(),blur:z.number().min(0).max(60).optional(),backdropBlur:z.number().min(0).max(60).optional(),tint:color.optional(),tintOpacity:z.number().min(0).max(1).optional()}).strict();
+export type PageBackground=z.infer<typeof pageBackgroundSchema>;
 
 const projectSchema = z.object({
 
@@ -123,7 +125,7 @@ const projectSchema = z.object({
 
   revision: z.number().int().min(0), createdAt: z.string().datetime(), updatedAt: z.string().datetime(),
 
-  pages: z.array(z.object({ id, name: z.string().min(1).max(120), rootId: id,width:z.number().min(240).max(5000).optional(),height:z.number().min(100).max(5000).optional(),archived:z.boolean().optional() })).min(1).max(100),
+  pages: z.array(z.object({ id, name: z.string().min(1).max(120), rootId: id,width:z.number().min(240).max(5000).optional(),height:z.number().min(100).max(5000).optional(),archived:z.boolean().optional(),background:pageBackgroundSchema.optional() })).min(1).max(100),
 
   nodes: z.record(nodeSchema), assets: z.record(assetSchema),
 
@@ -232,6 +234,7 @@ export function validateProject(input: unknown): Project {
   if (new Set(p.pages.map(page => page.id)).size !== p.pages.length) throw new Error('Duplicate page IDs.');
 
   for (const page of p.pages) {
+    if(page.background?.assetId&&!p.assets[page.background.assetId])throw new Error('Page background has a missing image.');
 
     if (p.nodes[page.rootId]?.kind !== 'container') throw new Error('Page root must be a container.');
 

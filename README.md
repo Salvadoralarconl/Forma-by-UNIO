@@ -4,12 +4,20 @@ A local Windows visual website creator. Build pages with drag-and-drop elements,
 
 ## A complete first workflow
 
-1. Choose New and create a blank project. New projects use free-placement pages. Existing flow projects remain unchanged; use **New free design page** to add a free page beside them.
+1. Choose New and create a blank project. New projects use free-placement pages. Existing flow projects remain unchanged; new blank projects use free placement.
 2. Open Elements. Expand a category or search. Drag a shape, text, or button onto the page; the drop outline shows its position. Click to insert at the default location.
 3. Shift-click or draw a selection box on empty page to select several. Position aligns left/center/right/top/middle/bottom against the selection or page;3+elements can distribute spacing. Move a selection together and snap to page/peer guides.
 4. Resize through all4sides and4corners. Corners keep proportions; sides stretch unless aspect lock is on. Position fields edit the active element. Page height stays fixed until its bottom handle is dragged or keyboard-resized. Off-page content is clipped, preserved and accessible through Layers/Position or by enlarging the page.
 5. Insert a Button preset. Change its label and choose Default/Hover/Pressed/Focus to edit color, shadow, scale, offset, duration and easing. Effects are supplied by default. Add an HTTP(S), page, or section action. Design edits; Preview interacts and scrolls like a website.
 6. Save a portable .forma project. Export website downloads/saves a ZIP containing offline Open-preview.html, CSS/local assets, attribution and independently buildable React source. Unzip and open the HTML with no build. The source README explains npm/Vite commands for further development.
+
+## Page backgrounds and movable panels
+
+Click the paint-bucket control beside a page, or click empty page space, to open page background Properties. Choose a color or local raster image, adjust image fit/position, background opacity, image blur, frosted-glass blur and tint. These effects affect the background layer; page objects remain sharp and opaque. Transparent backgrounds show a checkerboard in Design. Glass blur softens what is behind the page. Background assets and effects travel with the .forma project and website export.
+
+Drag an Elements, Properties or Layers tab to either panel column to dock it, or into the workspace to float it. Blue docking targets match each column's current width. Escape cancels a drag; placement is remembered on this device. Alt+Left/Right docks the focused tab and Alt+F floats it.
+
+Double-click text or a button label to edit it in place. Click outside to save or Escape to cancel. Button Properties include font controls and individual corner radii. Free text resize handles scale the font and box together; button resizing stops at its label/icon dimensions.
 
 ## Included tools
 
@@ -27,7 +35,7 @@ Internal Ctrl+C/Ctrl+V validates subtrees, creates fresh IDs, preserves/remaps n
 
 New free/interactive projects use format2. Earlier strict readers reject unsupported fields/versions; they do not silently render them as flow. Existing format1 flow projects remain readable without automatic conversion. Keep an older file copy when retaining compatibility with old builds. All visible pages are fixed and clipped; resizing content cannot grow the page, editor or docks. Legacy flow trees remain intact. Initial legacy height uses saved page height, root height, root minimum height, then780px, with a100px minimum. Use the bottom page-height handle to reveal retained content. New projects and fresh startup use free placement.
 
-Free coordinates and exported fixed page widths are **not responsive**. Breakpoint overrides, reusable design systems, arbitrary interaction timelines/data bindings and AI handoff are not yet implemented. Group resizing/grouping and alignment within nested flow compositions are deferred. Free-page union is rejected; the existing union tool remains available on compatible flow shapes. No native GUI or installer acceptance is claimed from browser tests.
+Free coordinates and exported fixed page widths are **not responsive**. Breakpoint overrides, reusable design systems, arbitrary interaction timelines/data bindings and AI handoff are not yet implemented. Group resizing/grouping and alignment within nested flow compositions are deferred. Select two unlocked sibling shapes on a free page to merge them into one outline. Exterior rounded corners are preserved. Compatible flow shapes retain the existing union tool. No native GUI or installer acceptance is claimed from browser tests.
 
 ## Build and evidence
 

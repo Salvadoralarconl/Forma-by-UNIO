@@ -1,3 +1,4 @@
+import {PageBackground} from './PageBackground';
 import {EditableText} from './EditableText';
 import { type CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
 
@@ -105,7 +106,7 @@ function useAssetUrls(project: Project) {
 
 
 
-export function Canvas({ editor, preview, width, zoom,pageId }: { editor: Editor; preview: boolean; width: number; zoom: number;pageId?:string }) {
+export function Canvas({ editor, preview, width, zoom,pageId,onPageBackground }: { onPageBackground?:()=>void; editor: Editor; preview: boolean; width: number; zoom: number;pageId?:string }) {
 
   const { project, selected, setSelected } = editor;
   const [showPageHeight,setShowPageHeight]=useState(false);
@@ -113,6 +114,7 @@ export function Canvas({ editor, preview, width, zoom,pageId }: { editor: Editor
   useEffect(()=>{setShowPageHeight(false);},[selectionKey,editor.pageId,preview]);
 
   const rootId = (project.pages.find(p => p.id === (pageId??editor.pageId)) ?? project.pages[0]).rootId;
+  const pageBackground=project.pages.find(p=>p.rootId===rootId)?.background;
   const visiblePages=project.pages.filter(p=>!p.archived),isFirstPage=visiblePages[0]?.rootId===rootId,isLastPage=visiblePages.at(-1)?.rootId===rootId;
 
   const urls = useAssetUrls(project);
@@ -141,7 +143,7 @@ export function Canvas({ editor, preview, width, zoom,pageId }: { editor: Editor
 
       className: `design-node ${!preview ? 'editable-node' : ''} ${selectedHere ? 'is-selected' : ''}`,
 
-      style: {...nodeStyle(n,parent),...(n.layoutMode==='free'?{overflow:'hidden' as const}:{})},
+      style: {...nodeStyle(n,parent),...(id===rootId&&pageBackground?{background:'transparent'}:{}),...(n.layoutMode==='free'?{overflow:'hidden' as const}:{})},
 
       onClick: !preview ? (event: React.MouseEvent) => { event.stopPropagation(); editor.setPageId(pageId??editor.pageId);if(id===rootId)editor.clearSelection(rootId);else setSelected(id); } : undefined,
 
@@ -196,10 +198,11 @@ export function Canvas({ editor, preview, width, zoom,pageId }: { editor: Editor
     <div className="artboard-wrap" style={{ width: width * zoom, height:pageHeight*zoom,minHeight: pageHeight * zoom }}>
 
       <div className="artboard-heading"><span>{project.pages.find(p => p.id === (pageId??editor.pageId))?.name}</span><span>{width} px</span></div>
-      {!preview&&<PageControls editor={editor} pageId={pageId??editor.pageId} resizing={showPageHeight} onResize={()=>setShowPageHeight(value=>!value)}/>}
+      {!preview&&<PageControls editor={editor} pageId={pageId??editor.pageId} resizing={showPageHeight} onResize={()=>setShowPageHeight(value=>!value)} onBackground={onPageBackground}/>}
 
-      <div data-page-id={pageId??editor.pageId} data-testid="artboard" className="artboard" style={{ width, zoom,height:pageHeight,overflow:'hidden' }}>
+      <div data-page-id={pageId??editor.pageId} data-testid="artboard" className="artboard" style={{ width, zoom,height:pageHeight,overflow:'hidden',...(pageBackground?{background:preview?'transparent':'repeating-conic-gradient(#ddd 0 25%,#fff 0 50%) 0 / 16px 16px'}:{}) }}>
 
+        {pageBackground&&<PageBackground background={pageBackground} imageUrl={pageBackground.assetId?urls[pageBackground.assetId]:undefined} fallbackColor={project.nodes[rootId].style.background}/>}
         {renderNode(rootId)}
         {!preview&&freePage&&<div className="free-canvas-guides"><EqualGapGuides gaps={free.guides.gaps}/>{free.guides.x!==undefined&&<div className="snap-guide vertical" style={{left:free.guides.x,height:pageHeight}}/>}{free.guides.y!==undefined&&<div className="snap-guide horizontal" style={{top:free.guides.y,width}}/>}{free.marquee&&<div className="marquee" style={{left:free.marquee.x,top:free.marquee.y,width:free.marquee.width,height:free.marquee.height}}/>}{dropPreview&&<div className="drop-preview" style={{left:dropPreview.x,top:dropPreview.y,width:dropPreview.width,height:dropPreview.height}}/>}</div>}
 

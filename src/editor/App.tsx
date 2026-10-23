@@ -189,7 +189,7 @@ export function App({ platform = defaultPlatform, initialProject }: { platform?:
 
         {preview && <div className="preview-info"><button onClick={() => setPreview(false)}><ArrowLeft size={13} />Back to design</button><span>Preview widths share the same layout. Breakpoint overrides are planned for milestone 2.</span></div>}
 
-        <div className="canvas-viewport" ref={canvasViewport} onPointerDown={e=>{if(!preview&&e.button===0&&!(e.target as HTMLElement).closest("[data-node-id],button,input,select,textarea,a"))editor.clearSelection();}}>{editor.project.pages.filter(p=>!p.archived).map(p=><Canvas key={p.id} editor={editor} pageId={p.id} preview={preview} width={preview?width:p.width??width} zoom={zoom}/>)}</div>
+        <div className="canvas-viewport" ref={canvasViewport} onPointerDown={e=>{if(!preview&&e.button===0&&!(e.target as HTMLElement).closest("[data-node-id],button,input,select,textarea,a"))editor.clearSelection();}}>{editor.project.pages.filter(p=>!p.archived).map(p=><Canvas key={p.id} editor={editor} pageId={p.id} onPageBackground={()=>workspaceController.show('properties')} preview={preview} width={preview?width:p.width??width} zoom={zoom}/>)}</div>
 
         <div className="canvas-bottom"><span><MousePointer2 size={12} />{preview ? 'Preview mode' : editor.selectedIds.length&&node ? `${node.name} selected` : 'Select a layer'}</span><span>{Object.keys(editor.project.nodes).length} layers <span>·</span> {editor.project.pages.length} {editor.project.pages.length === 1 ? 'page' : 'pages'}</span></div>
 

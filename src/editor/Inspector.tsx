@@ -1,3 +1,4 @@
+import {PageBackgroundInspector} from './PageBackgroundInspector';
 import { ArrowDown, ArrowUp, Copy, LockKeyhole, Trash2, UnlockKeyhole } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
@@ -65,6 +66,8 @@ export function Inspector({ editor }: { editor: Editor }) {
 
     onCommit={value => { const num = Number(value); if (value.trim() && Number.isFinite(num)) style({ [key]: num }); }} />;
 
+  const page=project.pages.find(p=>p.rootId===n.id);
+  if(page)return <PageBackgroundInspector editor={editor} pageId={page.id}/>;
   return <aside className="inspector">
 
     <div className="inspector-title"><h2>Properties</h2><span className="tag">{n.kind}</span></div>

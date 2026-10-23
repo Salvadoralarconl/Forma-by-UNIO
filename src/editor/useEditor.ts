@@ -332,6 +332,17 @@ export function useEditor(platform: Platform, initialProject: Project) {
 
   };
 
+  const addPageBackground=async(file:File,targetPageId:string)=>{
+    const atEpoch=epoch.current;
+    try{
+      if(file.size>MAX_ASSET)throw new Error('Each image must be 10 MB or smaller.');
+      const bytes=new Uint8Array(await file.arrayBuffer()),asset={id:newId(),name:file.name,mime:file.type,data:bytesToBase64(bytes)} as Asset;
+      verifyRaster(bytes,asset.mime);
+      if(atEpoch!==epoch.current||operationLock.current)return;
+      run({type:'pageBackground',id:targetPageId,asset,background:{assetId:asset.id}});
+    }catch(e){setError(e instanceof Error?e.message:String(e));}
+  };
+
   const insertElement = (key: ElementKey, targetId?: string,point?:{x:number;y:number}) => {
 
     const p=historyRef.current.present;
@@ -460,7 +471,7 @@ export function useEditor(platform: Platform, initialProject: Project) {
 
   return { project, history, pageId, setPageId, selected, setSelected,selectedIds,selectNode,selectMany,clearSelection,buttonState,setButtonState, path, dirty, busy, error, setError, notice,
 
-    run, undo: undoCommand, redo: redoCommand, save,exportWebsite, open, newProject, add, addImage, insertElement, mergeShapes, recovery, recover, discardRecovery,
+    run, undo: undoCommand, redo: redoCommand, save,exportWebsite, open, newProject, add, addImage, addPageBackground, insertElement, mergeShapes, recovery, recover, discardRecovery,
 
     copy,paste,canPaste,copyStyle,pasteStyle,canPasteStyle,confirm, cancelConfirm: () => setConfirm(null), acceptConfirm, flushRecovery };
 
