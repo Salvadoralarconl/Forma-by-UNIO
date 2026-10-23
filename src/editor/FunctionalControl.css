@@ -11,3 +11,6 @@
 .forma-search-match{outline:2px solid #e6ad37!important;outline-offset:2px}
 
 .control-icon,.functional-control form>button{display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0 10px;align-self:stretch}.control-icon svg,.functional-control form>button svg{display:block;flex-shrink:0}.control-edit-label{line-height:inherit;box-sizing:border-box}.control-edit-label[contenteditable=true]{box-shadow:none;outline:none!important}
+
+.functional-control[data-control=search]:focus-within{outline:2px solid #668ce6;outline-offset:2px}
+.functional-control[data-control=search] input:focus,.functional-control[data-control=search] input:focus-visible,.functional-control[data-control=search] form>button:focus,.functional-control[data-control=search] form>button:focus-visible{outline:none}
