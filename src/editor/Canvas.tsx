@@ -192,7 +192,7 @@ export function Canvas({ editor, preview, width, zoom,pageId }: { editor: Editor
     <div className="artboard-wrap" style={{ width: width * zoom, height:pageHeight*zoom,minHeight: pageHeight * zoom }}>
 
       <div className="artboard-heading"><span>{project.pages.find(p => p.id === (pageId??editor.pageId))?.name}</span><span>{width} px</span></div>
-      {!preview&&<PageControls editor={editor} pageId={pageId??editor.pageId}/>}
+      {!preview&&<PageControls editor={editor} pageId={pageId??editor.pageId} zoom={zoom} height={pageHeight}/>}
 
       <div data-page-id={pageId??editor.pageId} data-testid="artboard" className="artboard" style={{ width, zoom,height:pageHeight,overflow:'hidden' }}>
 

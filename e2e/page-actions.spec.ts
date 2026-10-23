@@ -9,3 +9,16 @@ test('side page actions reorder, hide, lock, duplicate and delete without introd
  await page.getByRole('button',{name:'Delete Page 2',exact:true}).click();await expect(boards).toHaveCount(1);await page.getByRole('button',{name:'Undo',exact:true}).click();await expect(boards).toHaveCount(2);
  const rects=await boards.evaluateAll(els=>els.map(e=>{const r=e.getBoundingClientRect();return{top:r.top,bottom:r.bottom};}));expect(Math.abs(rects[1].top-rects[0].bottom)).toBeLessThan(.5);
 });
+
+test('vertical page toolbar resizes page height with one undo',async({page})=>{
+ await page.goto('/');
+ const toolbar=page.getByRole('toolbar',{name:'Page actions for Home',exact:true});
+ await expect(toolbar).toHaveAttribute('aria-orientation','vertical');
+ expect(await toolbar.evaluate(el=>getComputedStyle(el).flexDirection)).toBe('column');
+ const board=page.getByTestId('artboard').first(),before=(await board.boundingBox())!;
+ const resize=toolbar.getByRole('button',{name:'Resize page height from toolbar',exact:true}),box=(await resize.boundingBox())!;
+ await page.mouse.move(box.x+box.width/2,box.y+box.height/2);await page.mouse.down();await page.mouse.move(box.x+box.width/2,box.y+box.height/2+60);await page.mouse.up();
+ await expect.poll(async()=>Math.round((await board.boundingBox())!.height-before.height)).toBe(60);
+ await page.getByRole('button',{name:'Undo',exact:true}).click();
+ await expect.poll(async()=>Math.round((await board.boundingBox())!.height)).toBe(Math.round(before.height));
+});
