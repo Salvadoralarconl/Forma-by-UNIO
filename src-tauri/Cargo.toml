@@ -1,0 +1,21 @@
+[package]
+name = "unio-forma"
+version = "0.2.4"
+description = "UNIO Forma local creative studio"
+authors = ["UNIO"]
+edition = "2021"
+rust-version = "1.99.1"
+
+[lib]
+name = "unio_forma_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-dialog = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tempfile = "3"

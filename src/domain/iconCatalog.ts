@@ -1,0 +1,7 @@
+import iconData from './icons.json' with {type:'json'};
+import unio from './unio-icons.json' with {type:'json'};
+import type {LocalIcon} from './iconPacks';
+const reused=new Set(['file-text','file','image','box','package','laptop','monitor','printer','server','router','wifi','headphones','keyboard','mouse','smartphone','tablet','camera','video','mic','speaker','cable','hard-drive','cpu','wrench','hammer','drill','car','truck','bike','armchair','sofa','lightbulb','briefcase']);
+export type CatalogIcon=LocalIcon&{packs:string[]};
+export const BUNDLED_ICONS:CatalogIcon[]=[...Object.entries(iconData).map(([key,paths])=>({id:key,name:key==='house'?'Home':key.replace(/-/g,' ').replace(/^./,c=>c.toUpperCase()),pack:'Lucide',packs:reused.has(key)?['Lucide','UNIO']:['Lucide'],style:'outline' as const,paths,tags:[key,key.includes('house')?'home navigation':'',key.includes('search')?'find magnify':'',key.includes('user')?'person account profile':'',key.includes('settings')?'preferences gear':'',key.startsWith('arrow')?'direction navigation':'']})),...unio.map(i=>({...i,style:i.style as LocalIcon['style'],packs:['UNIO']}))];
+export const iconMatches=(icon:LocalIcon,query:string,pack='All',style='All')=>(pack==='All'||(('packs' in icon?icon.packs:[icon.pack]) as string[]).includes(pack))&&(style==='All'||icon.style===style)&&query.toLowerCase().trim().split(/\s+/).filter(Boolean).every(term=>[icon.name,icon.pack,icon.style,...icon.tags].join(' ').toLowerCase().includes(term));

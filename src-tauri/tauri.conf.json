@@ -1,0 +1,44 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "UNIO Forma",
+  "version": "0.2.4",
+  "identifier": "com.unio.forma",
+  "build": {
+    "beforeDevCommand": "pnpm dev",
+    "beforeBuildCommand": "pnpm build",
+    "devUrl": "http://127.0.0.1:1420",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "UNIO Forma",
+        "width": 1440,
+        "height": 900,
+        "minWidth": 1060,
+        "minHeight": 700,
+        "decorations": false,
+        "dragDropEnabled": false,
+        "backgroundColor": "#282828"
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; font-src 'self'; connect-src ipc: http://ipc.localhost; object-src 'none'; frame-src 'none'; base-uri 'none'",
+      "capabilities": [
+        "default"
+      ]
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": [
+      "nsis"
+    ],
+    "shortDescription": "A local visual web design studio",
+    "category": "DeveloperTool",
+    "icon": [
+      "icons/icon.ico"
+    ]
+  }
+}

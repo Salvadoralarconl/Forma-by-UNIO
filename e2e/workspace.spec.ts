@@ -1,0 +1,73 @@
+import {openLegacyProject} from './legacyFixture';
+import { test, expect } from '@playwright/test';
+test('Elements, editable shapes, actual union and dock tabs survive project roundtrip',async({page},info)=>{
+  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('/');await openLegacyProject(page);
+  await page.getByRole('button',{name:'Elements library',exact:true}).click();
+  await page.getByRole('button',{name:'Insert Rectangle',exact:true}).click();
+  await page.getByLabel('Background',{exact:true}).fill('#d28c55');await page.getByLabel('Background',{exact:true}).press('Tab');
+  await page.getByRole('button',{name:'Insert Circle',exact:true}).click();
+  await page.getByLabel('Offset Y',{exact:true}).fill('-80');await page.getByLabel('Offset Y',{exact:true}).press('Tab');
+  await page.getByLabel('Enable shadow',{exact:true}).check();
+  await expect(page.getByTestId('artboard').getByRole('img')).toHaveCount(2);
+  const originalFirst=(await page.getByTestId('artboard').getByRole('img',{name:'Rectangle',exact:true}).boundingBox())!;
+  await page.getByLabel('Merge with shape',{exact:true}).selectOption({label:'Rectangle'});
+  await page.getByRole('button',{name:'Union shapes',exact:true}).click();
+  await expect(page.getByTestId('artboard').getByRole('img',{name:'Merged shape',exact:true})).toHaveCount(1);
+  await expect(page.getByTestId('artboard').getByRole('img')).toHaveCount(1);
+  const mergedBox=(await page.getByTestId('artboard').getByRole('img',{name:'Merged shape',exact:true}).boundingBox())!;
+  expect(Math.abs(mergedBox.y-originalFirst.y)).toBeLessThan(2);
+  await page.getByRole('button',{name:'Undo',exact:true}).click();await expect(page.getByTestId('artboard').getByRole('img')).toHaveCount(2);
+  await page.getByRole('button',{name:'Redo',exact:true}).click();await expect(page.getByTestId('artboard').getByRole('img')).toHaveCount(1);
+  const downloadPromise=page.waitForEvent('download');await page.getByRole('button',{name:'Save project',exact:true}).click();const file=info.outputPath('Shapes.forma');await (await downloadPromise).saveAs(file);
+  const chooser=page.waitForEvent('filechooser');await page.getByRole('button',{name:'Open project',exact:true}).click();await (await chooser).setFiles(file);
+  await expect(page.getByTestId('artboard').getByRole('img',{name:'Merged shape',exact:true})).toHaveCount(1);
+  await page.getByRole('button',{name:'Move Elements right',exact:true}).click();
+  await expect(page.getByLabel('left panel dock',{exact:true})).toHaveCount(0);
+  await expect(page.getByLabel('right panel dock',{exact:true}).getByRole('tab')).toHaveCount(3);
+  await page.getByRole('tab',{name:'Properties',exact:true}).click();
+  await expect(page.getByLabel('Layer name',{exact:true})).toBeVisible();
+  await page.reload();await expect(page.getByLabel('right panel dock',{exact:true}).getByRole('tab')).toHaveCount(3);
+  await expect(page.getByRole('tab',{name:'Properties',exact:true})).toHaveAttribute('aria-selected','true');
+  expect(errors).toEqual([]);
+});
+test('canvas resize handles change editable dimensions and undo restores them',async({page})=>{
+  await page.goto('/');await openLegacyProject(page);await page.getByRole('button',{name:'Elements library',exact:true}).click();await page.getByRole('button',{name:'Insert Rectangle',exact:true}).click();
+  const handle=page.getByRole('button',{name:'Resize selected layer',exact:true});await expect(handle).toBeVisible();
+  const box=(await handle.boundingBox())!;await page.mouse.move(box.x+box.width/2,box.y+box.height/2);await page.mouse.down();await page.mouse.move(box.x+65,box.y+45);await page.mouse.up();
+  await expect(page.getByLabel('Width',{exact:true})).not.toHaveValue('120');
+  await page.getByRole('button',{name:'Undo',exact:true}).click();await expect(page.getByLabel('Width',{exact:true})).toHaveValue('120');
+  await page.getByRole('button',{name:'Resize selected layer',exact:true}).focus();await page.keyboard.press('ArrowUp');
+  await expect(page.getByLabel('Height',{exact:true})).toHaveValue('119');await expect(page.getByLabel('Min height',{exact:true})).toHaveValue('119');
+});
+test('desktop chrome uses at most two compact bands and dark workspace scrollbars',async({page})=>{
+  await page.goto('/');const menubar=(await page.locator('.application-menubar').boundingBox())!,toolbar=(await page.locator('.topbar').boundingBox())!,workspace=(await page.locator('main.workspace').boundingBox())!;
+  expect(menubar.height+toolbar.height).toBeLessThanOrEqual(64);expect(workspace.y).toBeLessThanOrEqual(64);await expect(page.locator('.brand')).toHaveCount(0);
+  const scrollbar=await page.locator('.canvas-viewport').evaluate(el=>getComputedStyle(el).scrollbarColor);expect(scrollbar).not.toBe('auto');
+});
+test('small canvas drags and focus-loss cancellation restore the saved visual position',async({page})=>{
+  await page.goto('/');await page.getByRole('button',{name:'Elements library',exact:true}).click();await page.getByRole('button',{name:'Insert Rectangle',exact:true}).click();const shape=page.getByTestId('artboard').getByRole('img',{name:'Rectangle',exact:true});const before=(await shape.boundingBox())!;
+  await page.mouse.move(before.x+20,before.y+20);await page.mouse.down();await page.mouse.move(before.x+20.5,before.y+20);await page.mouse.up();let after=(await shape.boundingBox())!;expect(Math.abs(after.x-before.x)).toBeLessThan(.2);
+  await page.mouse.move(before.x+20,before.y+20);await page.mouse.down();await page.mouse.move(before.x+60,before.y+60);await page.evaluate(()=>window.dispatchEvent(new Event('blur')));await page.mouse.up();after=(await shape.boundingBox())!;expect(Math.abs(after.x-before.x)).toBeLessThan(.2);expect(Math.abs(after.y-before.y)).toBeLessThan(.2);
+});
+test('workspace wheel zoom, middle pan, cancellation and side-panel scrolling are independent of design',async({page})=>{
+  await page.goto('/');const viewport=page.locator('.canvas-viewport');const box=(await viewport.boundingBox())!;
+  await page.mouse.move(box.x+box.width/2,box.y+box.height/2);
+  const initial=await page.getByRole('button',{name:'Fit canvas',exact:true}).innerText();await page.mouse.wheel(0,-150);
+  await expect(page.getByRole('button',{name:'Fit canvas',exact:true})).not.toHaveText(initial);
+  const before=await viewport.evaluate(el=>({left:el.scrollLeft,top:el.scrollTop}));
+  await page.mouse.down({button:'middle'});await page.mouse.move(box.x+box.width/2-90,box.y+box.height/2-65);await page.mouse.up({button:'middle'});
+  const after=await viewport.evaluate(el=>({left:el.scrollLeft,top:el.scrollTop,maxLeft:el.scrollWidth-el.clientWidth,maxTop:el.scrollHeight-el.clientHeight}));expect(after.left).toBeCloseTo(Math.min(before.left+90,after.maxLeft),0);expect(after.top).toBeCloseTo(Math.min(before.top+65,after.maxTop),0);
+  await expect(viewport).not.toHaveClass(/is-panning/);
+  await page.mouse.down({button:'middle'});await page.evaluate(()=>window.dispatchEvent(new Event('blur')));await expect(viewport).not.toHaveClass(/is-panning/);await page.mouse.up({button:'middle'});
+  const zoom=await page.getByRole('button',{name:'Fit canvas',exact:true}).innerText();const panelBox=(await page.getByLabel('right panel dock',{exact:true}).boundingBox())!;await page.mouse.move(panelBox.x+100,panelBox.y+100);await page.mouse.wheel(0,200);
+  await expect(page.getByRole('button',{name:'Fit canvas',exact:true})).toHaveText(zoom);await expect(page.getByLabel('Preview width',{exact:true})).toHaveValue('1440');
+});
+test('rapid wheel bursts accumulate once per frame and preserve the cursor anchor',async({page})=>{
+  await page.goto('/');const viewport=page.locator('.canvas-viewport');const artboard=page.getByTestId('artboard');
+  const anchor=await artboard.evaluate(el=>{const rect=el.getBoundingClientRect(),zoom=parseFloat((el as HTMLElement).style.zoom);return{x:rect.left+200*zoom,y:rect.top+200*zoom};});
+  await viewport.evaluate((el,point)=>{for(let i=0;i<50;i++)el.dispatchEvent(new WheelEvent('wheel',{deltaY:-10,clientX:point.x,clientY:point.y,bubbles:true,cancelable:true}));},anchor);
+  await expect(page.getByRole('button',{name:'Fit canvas',exact:true})).toContainText('136%');
+  await expect.poll(()=>artboard.evaluate((el,point)=>{const rect=el.getBoundingClientRect(),z=parseFloat((el as HTMLElement).style.zoom);return Math.abs(rect.left+200*z-point.x)+Math.abs(rect.top+200*z-point.y);},anchor)).toBeLessThan(3);
+  await viewport.evaluate((el,point)=>{for(let i=0;i<50;i++)el.dispatchEvent(new WheelEvent('wheel',{deltaY:10,clientX:point.x,clientY:point.y,bubbles:true,cancelable:true}));},anchor);
+  await expect(page.getByRole('button',{name:'Fit canvas',exact:true})).toContainText('50%');
+});

@@ -1,0 +1,13 @@
+.floating-selection-toolbar{position:fixed;z-index:400;background:#353535;color:#c9c9c9;border:1px solid #202020;border-radius:3px;box-shadow:0 2px 5px #0004;font:10px "Segoe UI",sans-serif;overflow:auto;max-width:calc(100vw - 16px)}
+.floating-selection-toolbar [role=toolbar]{display:flex;align-items:center;padding:2px;gap:0;min-height:28px}
+.floating-selection-toolbar button{border-radius:2px;padding:5px 8px;color:inherit;font:inherit;min-height:26px}
+.floating-selection-toolbar button:hover:not(:disabled),.floating-selection-toolbar button[aria-expanded=true]{background:#4b4b4b}
+.floating-selection-toolbar button:focus-visible{outline:1px solid #6c96d4;outline-offset:-2px}
+.floating-selection-toolbar button:disabled{opacity:.38}
+.floating-selection-toolbar [role=toolbar]>span{padding:0 7px;color:#aaa;font-size:10px}
+.floating-selection-toolbar .selection-action-menu{display:flex;flex-direction:column;min-width:220px;border-top:1px solid #202020;padding:4px}
+.floating-selection-toolbar .selection-action-menu button{justify-content:space-between;text-align:left;width:100%}
+.floating-selection-toolbar .selection-action-submenu{display:flex;flex-direction:column;background:#2c2c2c;border-left:2px solid #6c96d4;margin:2px 3px 4px 10px;padding:3px}
+.floating-selection-toolbar [aria-label="More selection actions"]{border-left:1px solid #262626;border-radius:0;margin-left:2px}
+
+.floating-selection-toolbar [role=toolbar]{justify-content:center}

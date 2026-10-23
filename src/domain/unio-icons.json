@@ -1,0 +1,385 @@
+[
+  {
+    "id": "unio-home-rounded",
+    "name": "Home rounded",
+    "style": "rounded",
+    "paths": [
+      "M3 11Q2 10 4 8L10 3Q12 1 14 3L20 8Q22 10 21 11V19Q21 22 18 22H6Q3 22 3 19Z",
+      "M9 22V15Q9 13 12 13Q15 13 15 15V22"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "tags": [
+      "home",
+      "home rounded",
+      "unio"
+    ]
+  },
+  {
+    "id": "unio-home-minimal",
+    "name": "Home minimal",
+    "style": "minimal",
+    "paths": [
+      "M2 12L12 2L22 12",
+      "M5 10V21H10V15H14V21H19V10"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "tags": [
+      "home",
+      "home minimal",
+      "unio"
+    ]
+  },
+  {
+    "id": "unio-home-filled",
+    "name": "Home filled",
+    "style": "filled",
+    "paths": [
+      "M2 10L12 1L22 10V22H15V14H9V22H2Z"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "tags": [
+      "home",
+      "home filled",
+      "unio"
+    ]
+  },
+  {
+    "id": "unio-home-courtyard",
+    "name": "Home courtyard",
+    "style": "outline",
+    "paths": [
+      "M2 9L8 3L14 9V21H2Z",
+      "M14 12H22V21H14",
+      "M6 21V15H10V21",
+      "M17 16H19"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "tags": [
+      "home",
+      "home courtyard",
+      "unio"
+    ]
+  },
+  {
+    "id": "unio-search-minimal",
+    "name": "Search minimal",
+    "style": "minimal",
+    "paths": [
+      "M14 3A7 7 0 1 0 14 17A7 7 0 1 0 14 3",
+      "M18 16L23 22"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "tags": [
+      "search",
+      "search minimal",
+      "unio"
+    ]
+  },
+  {
+    "id": "unio-search-filled",
+    "name": "Search filled",
+    "style": "filled",
+    "paths": [
+      "M10 1A9 9 0 1 0 10 19A9 9 0 1 0 10 1ZM10 5A5 5 0 1 1 10 15A5 5 0 1 1 10 5Z",
+      "M16 17L19 15L24 21L21 24Z"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "tags": [
+      "search",
+      "search filled",
+      "unio"
+    ]
+  },
+  {
+    "id": "unio-user-rounded",
+    "name": "User rounded",
+    "style": "rounded",
+    "paths": [
+      "M8 6Q8 2 12 2Q16 2 16 6Q16 10 12 10Q8 10 8 6Z",
+      "M3 22V19Q3 13 12 13Q21 13 21 19V22"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "tags": [
+      "user",
+      "user rounded",
+      "unio"
+    ]
+  },
+  {
+    "id": "unio-user-filled",
+    "name": "User filled",
+    "style": "filled",
+    "paths": [
+      "M12 1A5 5 0 1 0 12 11A5 5 0 1 0 12 1Z",
+      "M2 23V19C2 11 22 11 22 19V23Z"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "tags": [
+      "user",
+      "user filled",
+      "unio"
+    ]
+  },
+  {
+    "id": "unio-settings-minimal",
+    "name": "Settings minimal",
+    "style": "minimal",
+    "paths": [
+      "M3 5H21M3 12H21M3 19H21",
+      "M7 2V8M16 9V15M10 16V22"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "tags": [
+      "settings",
+      "settings minimal",
+      "unio"
+    ]
+  },
+  {
+    "id": "unio-settings-filled",
+    "name": "Settings filled",
+    "style": "filled",
+    "paths": [
+      "M9 1H15L16 5L20 6L23 11L20 14L20 19L15 23L11 21L6 22L2 17L4 13L1 9L5 4L9 5Z",
+      "M9 12A3 3 0 1 0 15 12A3 3 0 1 0 9 12Z"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "tags": [
+      "settings",
+      "settings filled",
+      "unio"
+    ]
+  },
+  {
+    "id": "unio-arrow-rounded",
+    "name": "Arrow right rounded",
+    "style": "rounded",
+    "paths": [
+      "M2 12H20M14 4Q22 11 22 12Q22 13 14 20"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "tags": [
+      "arrow",
+      "arrow right rounded",
+      "unio"
+    ]
+  },
+  {
+    "id": "unio-arrow-filled",
+    "name": "Arrow right filled",
+    "style": "filled",
+    "paths": [
+      "M1 9H13V2L24 12L13 22V15H1Z"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "tags": [
+      "arrow",
+      "arrow right filled",
+      "unio"
+    ]
+  },
+  {
+    "id": "unio-folder",
+    "name": "Folder connected",
+    "style": "outline",
+    "paths": [
+      "M2 7V3H9L12 7H22V21H2Z",
+      "M2 11H22"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "tags": [
+      "folder",
+      "folder connected",
+      "unio"
+    ]
+  },
+  {
+    "id": "unio-document",
+    "name": "Document folded",
+    "style": "outline",
+    "paths": [
+      "M5 2H15L21 8V22H5Z",
+      "M15 2V8H21M9 12H17M9 16H17"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "tags": [
+      "document",
+      "document folded",
+      "unio"
+    ]
+  },
+  {
+    "id": "unio-save",
+    "name": "Save workspace",
+    "style": "outline",
+    "paths": [
+      "M3 2H18L22 6V22H2V2Z",
+      "M7 2V9H17V2M7 22V15H17V22"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "tags": [
+      "save",
+      "save workspace",
+      "unio"
+    ]
+  },
+  {
+    "id": "unio-open",
+    "name": "Open workspace",
+    "style": "outline",
+    "paths": [
+      "M2 21V4H9L12 7H21V11",
+      "M2 21L7 11H24L19 21Z"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "tags": [
+      "open",
+      "open workspace",
+      "unio"
+    ]
+  },
+  {
+    "id": "unio-layers",
+    "name": "Layers connected",
+    "style": "outline",
+    "paths": [
+      "M1 7L12 1L23 7L12 13Z",
+      "M2 12L12 18L22 12M2 17L12 23L22 17"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "tags": [
+      "layers",
+      "layers connected",
+      "unio"
+    ]
+  },
+  {
+    "id": "unio-link",
+    "name": "Link connected",
+    "style": "rounded",
+    "paths": [
+      "M9 16L6 19Q2 22 1 17Q0 14 4 11L8 7Q12 3 15 8",
+      "M9 16Q12 21 16 17L22 11Q25 6 20 4Q17 3 14 6L12 8"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "tags": [
+      "link",
+      "link connected",
+      "unio"
+    ]
+  },
+  {
+    "id": "unio-grid",
+    "name": "Grid spaces",
+    "style": "outline",
+    "paths": [
+      "M2 2H22V22H2Z",
+      "M2 9H22M2 16H22M9 2V22M16 2V22"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "tags": [
+      "grid",
+      "grid spaces",
+      "unio"
+    ]
+  },
+  {
+    "id": "unio-text",
+    "name": "Text tool",
+    "style": "outline",
+    "paths": [
+      "M2 6V2H22V6M12 2V22M7 22H17"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "tags": [
+      "text",
+      "text tool",
+      "unio"
+    ]
+  },
+  {
+    "id": "unio-image",
+    "name": "Image landscape",
+    "style": "outline",
+    "paths": [
+      "M2 2H22V22H2Z",
+      "M2 19L9 10L15 17L19 12L22 16",
+      "M15 6H17V8H15Z"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "tags": [
+      "image",
+      "image landscape",
+      "unio"
+    ]
+  },
+  {
+    "id": "unio-plus",
+    "name": "Add connected",
+    "style": "rounded",
+    "paths": [
+      "M12 2V22M2 12H22",
+      "M6 6H8M16 18H18"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "tags": [
+      "plus",
+      "add connected",
+      "unio"
+    ]
+  },
+  {
+    "id": "unio-check",
+    "name": "Check circle",
+    "style": "outline",
+    "paths": [
+      "M22 12A10 10 0 1 1 12 2",
+      "M6 11L11 16L23 3"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "tags": [
+      "check",
+      "check circle",
+      "unio"
+    ]
+  },
+  {
+    "id": "unio-tools",
+    "name": "Tools connected",
+    "style": "outline",
+    "paths": [
+      "M2 3L7 8L4 11L1 6Z",
+      "M7 8L21 22M15 3L18 1L23 6L20 9L17 6L6 20L3 17L15 3Z"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "tags": [
+      "tools",
+      "tools connected",
+      "unio"
+    ]
+  }
+]

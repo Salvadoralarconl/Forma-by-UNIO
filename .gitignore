@@ -1,0 +1,17 @@
+node_modules/
+dist/
+src-tauri/target/
+src-tauri/gen/
+test-results/
+playwright-report/
+.superpowers/
+*.tmp
+.pnpm-store/
+.toolchain-install/
+artifacts/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+Thumbs.db

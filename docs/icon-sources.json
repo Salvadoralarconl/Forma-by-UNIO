@@ -1,0 +1,62 @@
+{
+  "lucide": {
+    "count": 512,
+    "license": "ISC",
+    "source": "Installed lucide-react 0.468.0, icons.json generated offline"
+  },
+  "references": [
+    {
+      "repo": "Salvadoralarconl/Folio-by-UNIO",
+      "commit": "f87661dfac8074aee7cdf365dc6f1890b649c357",
+      "file": "src/components/FileIcon.tsx",
+      "reuse": [
+        "file-text",
+        "file",
+        "image"
+      ]
+    },
+    {
+      "repo": "Salvadoralarconl/UNIO",
+      "commit": "5650b802ae4d8e60db92686a616aeddb3738041b",
+      "file": "frontend/src/AssetTypeIcon.tsx",
+      "reuse": [
+        "box",
+        "package",
+        "laptop",
+        "monitor",
+        "printer",
+        "server",
+        "router",
+        "wifi",
+        "headphones",
+        "keyboard",
+        "mouse",
+        "smartphone",
+        "tablet",
+        "camera",
+        "video",
+        "mic",
+        "speaker",
+        "cable",
+        "hard-drive",
+        "cpu",
+        "wrench",
+        "hammer",
+        "drill",
+        "car",
+        "truck",
+        "bike",
+        "armchair",
+        "sofa",
+        "lightbulb",
+        "briefcase"
+      ]
+    }
+  ],
+  "UNIO": {
+    "newCount": 24,
+    "description": "New code-native monochrome designs, following a connected geometric and rounded minimal UI direction; not claimed to be pre-existing app assets. Brand logos not repurposed.",
+    "reusedCount": 33,
+    "reusedOrigin": "Lucide ISC vectors already referenced by owned apps; shared with generic pack, not double counted as unique geometry."
+  }
+}

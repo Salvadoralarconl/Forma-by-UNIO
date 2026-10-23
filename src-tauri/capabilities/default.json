@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Local main window only; native file dialogs and scoped project commands.",
+  "windows": ["main"],
+  "permissions": ["core:default", "core:window:allow-destroy", "core:window:allow-close", "core:window:allow-minimize", "core:window:allow-toggle-maximize", "core:window:allow-start-dragging", "core:window:allow-internal-toggle-maximize", "core:window:allow-is-maximized"]
+}
