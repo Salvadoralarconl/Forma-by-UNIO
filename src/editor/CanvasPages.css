@@ -15,3 +15,11 @@
 .stacked-page-stage .page-side-controls button[aria-pressed=true]{background:#4b4b4b}
 .stacked-page-stage .page-side-controls button:disabled{opacity:.38}
 .stacked-page-stage .page-side-controls .page-height-icon{cursor:ns-resize;touch-action:none}
+.text-resize-overlay .free-resize-handle{width:calc(var(--text-handle-size)*var(--text-handle-scale));height:calc(var(--text-handle-size)*var(--text-handle-scale));border-width:calc(1px*var(--text-handle-scale));box-shadow:none}
+.text-resize-overlay .free-resize-handle::before{inset:calc(-2px*var(--text-handle-scale))}
+.text-resize-overlay .handle-nw,.text-resize-overlay .handle-sw{left:calc(var(--text-handle-size)*var(--text-handle-scale)*-.5)}
+.text-resize-overlay .handle-ne,.text-resize-overlay .handle-se{right:calc(var(--text-handle-size)*var(--text-handle-scale)*-.5)}
+.text-resize-overlay .handle-nw,.text-resize-overlay .handle-ne{top:calc(var(--text-handle-size)*var(--text-handle-scale)*-.5)}
+.text-resize-overlay .handle-sw,.text-resize-overlay .handle-se{bottom:calc(var(--text-handle-size)*var(--text-handle-scale)*-.5)}
+.text-resize-overlay .free-resize-handle.handle-n,.text-resize-overlay .free-resize-handle.handle-s{width:calc(14px*var(--text-handle-scale));height:calc(4px*var(--text-handle-scale))}
+.text-resize-overlay .free-resize-handle.handle-e,.text-resize-overlay .free-resize-handle.handle-w{width:calc(4px*var(--text-handle-scale));height:calc(14px*var(--text-handle-scale))}
