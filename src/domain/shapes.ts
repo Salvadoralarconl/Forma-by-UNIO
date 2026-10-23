@@ -11,10 +11,19 @@ export function polygonsFor(shape: ShapeGeometry): MultiPolygon {
   });
   ring.push([...ring[0]]); return [[ring]];
 }
-export function mergeShapeGeometry(a: ShapeGeometry, b: ShapeGeometry, offset: { x: number; y: number }): ShapeGeometry {
+function roundedPolygons(shape:ShapeGeometry,radius:number):MultiPolygon{
+  const r=Math.min(Math.max(0,radius),shape.width/2,shape.height/2);
+  if(shape.type!=='rectangle'||!r)return polygonsFor(shape);
+  const ring:Point[]=[];
+  for(const [cx,cy,start] of [[shape.width-r,r,-90],[shape.width-r,shape.height-r,0],[r,shape.height-r,90],[r,r,180]]){
+    for(let i=0;i<=32;i++){const angle=(start+i*90/32)*Math.PI/180;ring.push([cx+r*Math.cos(angle),cy+r*Math.sin(angle)]);}
+  }
+  ring.push([...ring[0]]);return [[ring]];
+}
+export function mergeShapeGeometry(a: ShapeGeometry, b: ShapeGeometry, offset: { x: number; y: number },radiusA=0,radiusB=0): ShapeGeometry {
   if (![a.width,a.height,b.width,b.height,offset.x,offset.y].every(Number.isFinite) || Math.abs(offset.x)>5000 || Math.abs(offset.y)>5000) throw new Error('Invalid shape dimensions or merge offset.');
-  const translated = polygonsFor(b).map(polygon => polygon.map(ring => ring.map(([x,y]): Point => [x+offset.x,y+offset.y])));
-  const result = polygonClipping.union(polygonsFor(a), translated) as MultiPolygon;
+  const translated = roundedPolygons(b,radiusB).map(polygon => polygon.map(ring => ring.map(([x,y]): Point => [x+offset.x,y+offset.y])));
+  const result = polygonClipping.union(roundedPolygons(a,radiusA), translated) as MultiPolygon;
   const points = result.flat(2);
   if (!points.length || points.length > 10000) throw new Error('Shape union is empty or too complex.');
   const minX = Math.min(...points.map(p=>p[0])), minY=Math.min(...points.map(p=>p[1]));

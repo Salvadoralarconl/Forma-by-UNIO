@@ -17,6 +17,10 @@ export const styleSchema = z.object({
   gap: z.number().min(0).max(500).optional(),
 
   borderRadius: z.number().min(0).max(500).optional(),
+  borderTopLeftRadius:z.number().min(0).max(500).optional(),
+  borderTopRightRadius:z.number().min(0).max(500).optional(),
+  borderBottomRightRadius:z.number().min(0).max(500).optional(),
+  borderBottomLeftRadius:z.number().min(0).max(500).optional(),
 
   fontSize: z.number().min(8).max(300).optional(),
 

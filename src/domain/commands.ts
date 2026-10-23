@@ -18,7 +18,7 @@ export type Command =
  | {type:'spacing';id:string;side:SpacingSide;gap:number}
  | {type:'resizePage';id:string;height:number}
  | {type:'position';ids:string[];mode:Alignment;reference:'page'|'selection'}
- | {type:'frames';updates:{id:string;frame:Frame}[]}
+ | {type:'frames';updates:{id:string;frame:Frame;fontSize?:number}[]}
   | {type:'addIcon';parentId:string;icon:LocalIcon;point?:{x:number;y:number}}
 
   | {type:'paste';parentId:string;fragment:Fragment}
@@ -69,7 +69,7 @@ export function applyCommand(project: Project, command: Command): Project {
     }
 
     case 'resizePage': {const page=p.pages.find(page=>page.id===command.id),root=page?p.nodes[page.rootId]:undefined;if(!page||!root||root.locked||!Number.isFinite(command.height)||command.height<100||command.height>5000)throw new Error('Choose an unlocked page and height100-5000.');page.height=command.height;if(root.layoutMode==='free'){root.style.height=command.height;root.style.minHeight=command.height;}break;}
-    case 'frames': {const selection=freeSelection(p,command.updates.map(u=>u.id));for(const update of command.updates){const f=update.frame;if(!Object.values(f).every(Number.isFinite)||f.x<0||f.y<0||f.width<=0||f.height<=0||f.width>5000||f.height>5000||f.x>5000||f.y>5000)throw new Error('Keep the element inside the page.');}for(const update of command.updates)p.nodes[update.id].frame=update.frame;break;}
+    case 'frames': {const selection=freeSelection(p,command.updates.map(u=>u.id));for(const update of command.updates){const f=update.frame;if(!Object.values(f).every(Number.isFinite)||f.x<0||f.y<0||f.width<=0||f.height<=0||f.width>5000||f.height>5000||f.x>5000||f.y>5000)throw new Error('Keep the element inside the page.');}for(const update of command.updates){const n=p.nodes[update.id];if(update.fontSize!==undefined){if(n.kind!=='text'||!Number.isFinite(update.fontSize)||update.fontSize<8||update.fontSize>300)throw new Error('Text size must be 8–300.');n.style.fontSize=update.fontSize;}n.frame=update.frame;}break;}
     case 'spacing': {const selection=freeSelection(p,[command.id]),peers=selection.parent.children.filter(id=>id!==command.id).map(id=>p.nodes[id]).filter(n=>!n.hidden&&n.frame).map(n=>n.frame!);p.nodes[command.id].frame=setSurroundingGap(selection.nodes[0].frame!,peers,selection.width,selection.height,command.side,command.gap);break;}
     case 'position': {const selected=freeSelection(p,command.ids),bounds=command.reference==='page'?{x:0,y:0,width:selected.width,height:selected.height}:unionBounds(selected.nodes.map(n=>n.frame!));for(const update of alignedFrames(selected.nodes,bounds,command.mode)){if(update.frame.x<0||update.frame.y<0)throw new Error('Elements exceed the alignment area.');p.nodes[update.id].frame=update.frame;}break;}
     case 'renameProject': p.name = command.name.trim(); break;
@@ -197,7 +197,17 @@ export function applyCommand(project: Project, command: Command): Project {
 
       if (node?.kind!=='shape'||other?.kind!=='shape'||!node.geometry||!other.geometry||node.id===other.id) throw new Error('Choose two different shape layers.');
 
-      if(node.frame||other.frame)throw new Error('Union currently supports flow shapes; free-page union is a later increment.');
+      if(node.frame||other.frame){
+        if(!node.frame||!other.frame)throw new Error('Shapes must share a free page.');
+        freeSelection(p,[node.id,other.id]);
+        const parent=parentOf(p,node.id)!,a=node.frame,b=other.frame;
+        const scale=(n:DesignNode)=>{const g=n.geometry!,f=n.frame!,sx=f.width/g.width,sy=f.height/g.height;return {...g,width:f.width,height:f.height,polygons:g.polygons?.map(poly=>poly.map(ring=>ring.map(([x,y])=>[x*sx,y*sy] as [number,number])))};};
+        const geometry=mergeShapeGeometry(scale(node),scale(other),{x:b.x-a.x,y:b.y-a.y},node.style.borderRadius,other.style.borderRadius);
+        node.frame={x:Math.min(a.x,b.x),y:Math.min(a.y,b.y),width:geometry.width,height:geometry.height};
+        node.geometry=geometry;node.name='Merged shape';node.style={...node.style,borderRadius:0};
+        const insertion=Math.min(parent.children.indexOf(node.id),parent.children.indexOf(other.id));
+        parent.children=parent.children.filter(id=>id!==node.id&&id!==other.id);parent.children.splice(insertion,0,node.id);delete p.nodes[other.id];break;
+      }
       const parent=parentOf(p,node.id), otherParent=parentOf(p,other.id);
 
       if(!parent||parent.id!==otherParent?.id) throw new Error('Shapes must share the same parent container.');
@@ -224,7 +234,7 @@ export function applyCommand(project: Project, command: Command): Project {
 
       };
 
-      const geometry=mergeShapeGeometry(scale(node,command.measurements?.first),scale(other,command.measurements?.second),command.offset);
+      const geometry=mergeShapeGeometry(scale(node,command.measurements?.first),scale(other,command.measurements?.second),command.offset,node.style.borderRadius,other.style.borderRadius);
 
       if(command.availableWidth!==undefined&&geometry.width>command.availableWidth+.01)throw new Error('Merged shape exceeds the available width. Enlarge the container or overlap the shapes further.');
 

@@ -19,7 +19,7 @@ export function nodeStyle(node: DesignNode,parent?:DesignNode): CSSProperties {
   const grow=fillMain?1:legacyGrow?s.flexGrow:undefined;
 
   const free=parent?.layoutMode==='free'&&node.frame;
-  return { opacity:s.opacity,background: node.kind==='shape'||node.kind==='icon'?undefined:s.gradient?`linear-gradient(${s.gradient.angle}deg, ${s.gradient.from}, ${s.gradient.to})`:s.background, color: s.color, padding: s.padding, gap: s.gap, borderRadius: s.borderRadius,
+  return { opacity:s.opacity,background: node.kind==='shape'||node.kind==='icon'?undefined:s.gradient?`linear-gradient(${s.gradient.angle}deg, ${s.gradient.from}, ${s.gradient.to})`:s.background, color: s.color, padding: s.padding, gap: s.gap, borderRadius: s.borderRadius,borderTopLeftRadius:s.borderTopLeftRadius,borderTopRightRadius:s.borderTopRightRadius,borderBottomRightRadius:s.borderBottomRightRadius,borderBottomLeftRadius:s.borderBottomLeftRadius,
 
     fontSize: s.fontSize, fontWeight: s.fontWeight,fontFamily:s.fontFamily==='system'?undefined:s.fontFamily,fontStyle:s.fontStyle,lineHeight:s.lineHeight,letterSpacing:s.letterSpacing,
 

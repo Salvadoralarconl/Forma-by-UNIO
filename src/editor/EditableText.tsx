@@ -6,8 +6,8 @@ export function EditableText({text,editable,props,onCommit}:{text:string;editabl
  useEffect(()=>{if(!editing||!ref.current)return;ref.current.focus();const range=document.createRange();range.selectNodeContents(ref.current);const selection=window.getSelection();selection?.removeAllRanges();selection?.addRange(range);},[editing]);
  const finish=(save:boolean)=>{if(!editing)return;const next=ref.current?.innerText.replace(/\r\n/g,'\n')??original.current;setEditing(false);if(ref.current)ref.current.textContent=save?next:original.current;if(save&&next!==original.current)onCommit(next);};
  return <p {...props} ref={ref} contentEditable={editing} suppressContentEditableWarning role={editing?'textbox':undefined} aria-label={editing?'Edit text':undefined} aria-multiline={editing?true:undefined}
- style={{...props.style,...(editing?{userSelect:'text',cursor:'text',outline:'1px solid #6c96d4'}:{})}}
- onDoubleClick={event=>{if(!editable)return;event.preventDefault();event.stopPropagation();original.current=text;setEditing(true);}}
+ style={{...props.style,...(editing?{userSelect:'text',cursor:'text',pointerEvents:'auto',outline:'1px solid #6c96d4'}:{})}}
+ onDoubleClick={event=>{event.stopPropagation();if(!editable)return;event.preventDefault();original.current=text;setEditing(true);}}
  onPointerDown={event=>{if(editing){event.stopPropagation();return;}props.onPointerDown?.(event);}}
  onPointerMove={event=>{if(!editing)props.onPointerMove?.(event);}}
  onPointerUp={event=>{if(!editing)props.onPointerUp?.(event);}}

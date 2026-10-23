@@ -1,6 +1,6 @@
 import {useEffect,useLayoutEffect,useRef,useState} from 'react';
 import {createPortal} from 'react-dom';
-import {LockKeyhole,UnlockKeyhole,Copy,Trash2,Ellipsis} from 'lucide-react';
+import {LockKeyhole,UnlockKeyhole,Copy,Trash2,Ellipsis,Merge} from 'lucide-react';
 import type {Editor} from './useEditor';
 import {freeSelection,type Alignment,type Frame} from '../domain/placement';
 import {parentOf} from '../domain/model';
@@ -12,6 +12,9 @@ export function SelectionToolbar({editor,rootId,zoom,dragBounds}:{editor:Editor;
  const single=editor.selectedIds.length===1,eligible=!!node&&node.id!==rootId&&!!parent&&!node.hidden;
  const mutable=eligible&&single&&!node.locked&&!parent?.locked&&!editor.busy;
  let alignable=false;try{freeSelection(editor.project,editor.selectedIds);alignable=single;}catch{}
+ const pair=editor.selectedIds.map(id=>editor.project.nodes[id]);
+ let mergeable=false;try{freeSelection(editor.project,editor.selectedIds);mergeable=pair.length===2&&pair.every(n=>n.kind==='shape'&&!!n.geometry)&&!editor.busy;}catch{}
+ const merge=()=>{const other=editor.selectedIds.find(id=>id!==node.id);if(other)editor.mergeShapes(other);};
  const close=()=>{setMenu(false);setSubmenu(null);};
  useEffect(()=>{close();},[editor.selected,editor.project]);
  useEffect(()=>{const outside=(e:PointerEvent)=>{if(!ref.current?.contains(e.target as Node))close();},escape=(e:KeyboardEvent)=>{if(e.key==='Escape'&&menuOpen.current){close();ref.current?.querySelector<HTMLButtonElement>('[aria-label="More selection actions"]')?.focus();}};document.addEventListener('pointerdown',outside);document.addEventListener('keydown',escape);return()=>{document.removeEventListener('pointerdown',outside);document.removeEventListener('keydown',escape);};},[]);
@@ -27,7 +30,7 @@ export function SelectionToolbar({editor,rootId,zoom,dragBounds}:{editor:Editor;
  const item=(label:string,fn:()=>void,disabled=false)=><button role="menuitem" disabled={disabled} onClick={()=>action(fn)}>{label}</button>;
  const index=parent!.children.indexOf(node.id),last=parent!.children.length-1;
  return createPortal(<div ref={ref} className="floating-selection-toolbar" style={{left:position?.left??0,top:position?.top??0,visibility:position?'visible':'hidden',maxHeight:position?.maxHeight}} onPointerDown={e=>e.stopPropagation()} onKeyDown={e=>{if(!menu||!["ArrowDown","ArrowUp","Home","End"].includes(e.key))return;const items=Array.from(ref.current?.querySelectorAll<HTMLButtonElement>("[role=menuitem]:not(:disabled)")??[]);if(!items.length)return;e.preventDefault();const index=items.indexOf(document.activeElement as HTMLButtonElement);items[e.key==="Home"?0:e.key==="End"?items.length-1:e.key==="ArrowDown"?(index+1)%items.length:(index-1+items.length)%items.length]?.focus();}}>
-  <div role="toolbar" aria-label="Selection actions"><button aria-label={node.locked?'Unlock selection':'Lock selection'} disabled={!single||editor.busy||!!parent?.locked} title={node.locked?'Unlock':'Lock'} onClick={lock}>{node.locked?<UnlockKeyhole size={16}/>:<LockKeyhole size={16}/>}</button><button aria-label="Duplicate selection" disabled={!mutable} title="Duplicate" onClick={()=>mutate('duplicate')}><Copy size={16}/></button><button aria-label="Delete selection" disabled={!mutable} title="Delete" onClick={()=>mutate('delete')}><Trash2 size={16}/></button><button aria-label="More selection actions" aria-haspopup="menu" aria-expanded={menu} onClick={()=>{setMenu(!menu);setSubmenu(null);}} title="More"><Ellipsis size={16}/></button>{!single&&<span>{editor.selectedIds.length} selected</span>}</div>
+  <div role="toolbar" aria-label="Selection actions"><button aria-label={node.locked?'Unlock selection':'Lock selection'} disabled={!single||editor.busy||!!parent?.locked} title={node.locked?'Unlock':'Lock'} onClick={lock}>{node.locked?<UnlockKeyhole size={16}/>:<LockKeyhole size={16}/>}</button><button aria-label="Duplicate selection" disabled={!mutable} title="Duplicate" onClick={()=>mutate('duplicate')}><Copy size={16}/></button><button aria-label="Delete selection" disabled={!mutable} title="Delete" onClick={()=>mutate('delete')}><Trash2 size={16}/></button><button aria-label="More selection actions" aria-haspopup="menu" aria-expanded={menu} onClick={()=>{setMenu(!menu);setSubmenu(null);}} title="More"><Ellipsis size={16}/></button>{mergeable&&<button aria-label="Merge shapes" title="Merge shapes into one" onClick={()=>action(merge)}><Merge size={16}/>Merge</button>}{!single&&<span>{editor.selectedIds.length} selected</span>}</div>
   {menu&&<div role="menu" aria-label="Selection menu" className="selection-action-menu">
    {item('Copy',editor.copy,!single||editor.busy)}{item('Copy style',editor.copyStyle,!single||editor.busy)}{item('Paste',editor.paste,!single||!editor.canPaste||editor.busy||!!node.locked||!!parent?.locked)}{editor.canPasteStyle&&item('Paste style',editor.pasteStyle,!mutable)}{item('Duplicate',()=>mutate('duplicate'),!mutable)}{item('Delete',()=>mutate('delete'),!mutable)}
    <button role="menuitem" aria-haspopup="menu" aria-expanded={submenu==='layer'} disabled={!mutable||parent?.layoutMode!=='free'} aria-label="Layer" onClick={()=>setSubmenu(submenu==='layer'?null:'layer')}>Layer <span>›</span></button>

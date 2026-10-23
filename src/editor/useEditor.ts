@@ -360,6 +360,7 @@ export function useEditor(platform: Platform, initialProject: Project) {
   const mergeShapes = (otherId:string) => {
 
     const p=historyRef.current.present,n=p.nodes[selected];
+    if(n?.frame&&p.nodes[otherId]?.frame){run({type:'mergeShapes',id:selected,otherId,offset:{x:0,y:0}});return;}
 
     const a=document.querySelector<HTMLElement>(`[data-node-id="${selected}"]`)?.getBoundingClientRect();
 

@@ -22,6 +22,7 @@ it('keeps a legacy page fixed and retains oversized flow content in Design and P
  render(<App platform={platform} initialProject={p}/>);
  expect(screen.getByTestId('artboard').style.height).toBe('1100px');
  expect(screen.getByTestId('artboard').style.overflow).toBe('hidden');
+ fireEvent.click(screen.getByRole('button',{name:'Resize page height from toolbar'}));
  expect(screen.getByRole('button',{name:'Resize page height'})).toBeTruthy();
  expect(p.nodes.large.style.height).toBe(4000);expect(root.children).toContain('large');
  fireEvent.click(screen.getByRole('button',{name:'Preview'}));
