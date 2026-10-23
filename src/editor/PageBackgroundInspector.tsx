@@ -1,3 +1,4 @@
+import {PropertySearch} from './PropertySearch';
 import {useRef} from 'react';
 import {newId,type PageBackground} from '../domain/model';
 import type {Editor} from './useEditor';
@@ -7,7 +8,7 @@ export function PageBackgroundInspector({editor,pageId}:{editor:Editor;pageId:st
  const input=useRef<HTMLInputElement>(null),group=useRef<string|undefined>(undefined),page=editor.project.pages.find(p=>p.id===pageId)!;
  const root=editor.project.nodes[page.rootId],background=page.background??{},asset=background.assetId?editor.project.assets[background.assetId]:undefined;
  const update=(patch:Partial<PageBackground>,historyGroup?:string)=>editor.run({type:'pageBackground',id:pageId,background:patch},historyGroup);
- return <aside className="inspector"><div className="inspector-title"><h2>Page background</h2><span className="tag">Page</span></div>
+ return <aside className="inspector"><PropertySearch kind="Page"/>
  {root.locked&&<div className="property-section"><button onClick={()=>editor.run({type:'update',id:root.id,patch:{locked:false}})}>Unlock page background</button></div>}
  <fieldset disabled={editor.busy||root.locked}>
  <div className="property-section"><Field label="Page name" value={page.name} onCommit={name=>editor.run({type:'renamePage',id:pageId,name})}/><Field label="Layer name" value={root.name} onCommit={name=>editor.run({type:'update',id:root.id,patch:{name}})}/>

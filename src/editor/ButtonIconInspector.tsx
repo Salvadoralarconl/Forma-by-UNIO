@@ -1,0 +1,10 @@
+import {useState} from 'react';
+import {BUNDLED_ICONS,iconMatches} from '../domain/iconCatalog';
+import {readImportedIcons,type LocalIcon} from '../domain/iconPacks';
+import type {Editor} from './useEditor';
+import {Field} from './Inspector';
+export function ButtonIconInspector({editor}:{editor:Editor}){
+const [open,setOpen]=useState(false),[query,setQuery]=useState('');const n=editor.project.nodes[editor.selected],icon=n.children.map(id=>editor.project.nodes[id]).find(n=>n.kind==='icon');
+const choose=(i:LocalIcon)=>{const {id,name,pack,style,paths,tags,fills,paint,viewBox}=i;editor.run({type:'buttonIcon',id:n.id,icon:{id,name,pack,style,paths,tags,fills,paint,viewBox},position:'left'});setOpen(false);};
+return <><h3>Button icon</h3><button onClick={()=>setOpen(!open)}>{icon?'Change icon':'Add icon'}</button>{icon&&<><Field label="Button icon size" type="number" min={8} max={96} value={icon.style.width??20} onCommit={v=>editor.run({type:'buttonIcon',id:n.id,size:Number(v)})}/><label className="field"><span>Icon placement</span><select aria-label="Button icon placement" value={n.children[0]===icon.id?'left':'right'} onChange={e=>editor.run({type:'buttonIcon',id:n.id,position:e.target.value as 'left'|'right'})}><option>left</option><option>right</option></select></label><button onClick={()=>editor.run({type:'buttonIcon',id:n.id,remove:true})}>Remove icon</button></>}{open&&<><input aria-label="Search button icons" placeholder="Search icons" value={query} onChange={e=>setQuery(e.target.value)}/><div style={{display:'grid',gridTemplateColumns:'repeat(5,1fr)',maxHeight:200,overflowY:'auto',gap:4}}>{[...BUNDLED_ICONS,...readImportedIcons()].filter(i=>iconMatches(i,query)).map(i=><button key={i.pack+i.id} title={i.name} aria-label={'Use '+i.name+' icon'} onClick={()=>choose(i)}><svg width="20" height="20" viewBox={(i.viewBox??[0,0,24,24]).join(' ')}>{i.paths.map((d,k)=><path key={k} d={d} fill={(i.fills?.[k]??i.style==='filled')?'currentColor':'none'} stroke="currentColor" strokeWidth="2"/>)}</svg></button>)}</div></>}</>;
+}

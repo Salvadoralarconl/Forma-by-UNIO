@@ -14,6 +14,7 @@ import {localIconSchema,type LocalIcon} from './iconPacks';
 import {setSurroundingGap,type SpacingSide} from './spacing';
 import {alignedFrames,freeSelection,unionBounds,initialFrameSize,type Frame,type Alignment} from './placement';
 export type Command =
+ | {type:'buttonIcon';id:string;icon?:LocalIcon;position?:'left'|'right';size?:number;remove?:boolean}
  | {type:'pageBackground';id:string;background:Partial<PageBackground>;asset?:Asset}
  | {type:'resizePageWidth';id:string;width:number}
  | {type:'spacing';id:string;side:SpacingSide;gap:number}
@@ -121,6 +122,13 @@ export function applyCommand(project: Project, command: Command): Project {
 
     }
 
+    case 'buttonIcon': {
+const parent=p.nodes[command.id];if(!parent?.button)throw new Error('Choose a button.');let icon=parent.children.map(id=>p.nodes[id]).find(n=>n.kind==='icon');if(icon?.locked)throw new Error('Unlock the icon first.');
+if(command.remove){if(icon){parent.children=parent.children.filter(id=>id!==icon!.id);delete p.nodes[icon.id];}break;}
+if(command.size!==undefined&&(!Number.isFinite(command.size)||command.size<8||command.size>96))throw new Error('Icon size must be between 8 and 96.');
+if(command.icon){const data=localIconSchema.parse(command.icon);if(!icon){icon=makeNode('icon',newId(),data.name,{width:20,height:20,minHeight:0,background:parent.style.color??'#ffffff'});p.nodes[icon.id]=icon;parent.children.push(icon.id);}icon.name=data.name;icon.iconPaths=data.paths;icon.iconPaint=data.paint;icon.iconFills=data.fills??data.paths.map(()=>data.style==='filled');icon.iconViewBox=data.viewBox;}
+if(!icon)break;if(command.size!==undefined){icon.style.width=command.size;icon.style.height=command.size;}if(command.position){parent.children=parent.children.filter(id=>id!==icon!.id);if(command.position==='left')parent.children.unshift(icon.id);else parent.children.push(icon.id);}break;
+}
     case 'addIcon': {const data=localIconSchema.parse(command.icon),parent=p.nodes[command.parentId];if(!parent||parent.kind!=='container'||parent.locked||(parent.button||parent.control))throw new Error('Choose an unlocked container.');const n=makeNode('icon',newId(),data.name,{width:32,height:32,minHeight:0,background:'#242a35',borderRadius:0});n.iconPaths=data.paths;n.iconPaint=data.paint;n.iconFills=data.fills??data.paths.map(()=>data.style==='filled');n.iconViewBox=data.viewBox;n.annotations=[{id:newId(),text:`Icon pack: ${data.pack}. Imported geometry embedded in project.`}];p.nodes[n.id]=n;parent.children.push(n.id);break;}
     case 'paste': {pasteFragment(p,command.parentId,command.fragment);break;}
 

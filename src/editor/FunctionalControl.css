@@ -9,3 +9,5 @@
 .functional-control output:empty{display:none}
 .functional-control output{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#353535;color:#eee;padding:5px 7px;border-radius:3px;font:11px 'Segoe UI',sans-serif;z-index:5}
 .forma-search-match{outline:2px solid #e6ad37!important;outline-offset:2px}
+
+.control-icon,.functional-control form>button{display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0 10px;align-self:stretch}.control-icon svg,.functional-control form>button svg{display:block;flex-shrink:0}.control-edit-label{line-height:inherit;box-sizing:border-box}.control-edit-label[contenteditable=true]{box-shadow:none;outline:none!important}

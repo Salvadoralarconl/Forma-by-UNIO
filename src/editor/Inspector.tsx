@@ -1,3 +1,4 @@
+import {PropertySearch} from './PropertySearch';
 import {ControlInspector} from './ControlInspector';
 import {PageBackgroundInspector} from './PageBackgroundInspector';
 import { ArrowDown, ArrowUp, Copy, LockKeyhole, Trash2, UnlockKeyhole } from 'lucide-react';
@@ -71,7 +72,7 @@ export function Inspector({ editor }: { editor: Editor }) {
   if(page)return <PageBackgroundInspector editor={editor} pageId={page.id}/>;
   return <aside className="inspector">
 
-    <div className="inspector-title"><h2>Properties</h2><span className="tag">{n.kind}</span></div>
+    <PropertySearch kind={n.kind}/>
 
     <ControlInspector editor={editor}/><ButtonInspector editor={editor}/><PositionPanel editor={editor}/>
     <fieldset disabled={editor.busy} className="properties-fields">

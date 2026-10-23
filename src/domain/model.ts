@@ -85,7 +85,7 @@ export const buttonSchema=z.object({textOnly:z.boolean().optional(),states:z.obj
 export type ButtonBehavior=z.infer<typeof buttonSchema>;
 export const defaultButtonBehavior=(outline=false):ButtonBehavior=>({states:{hover:{background:outline?'#e9efff':'#2455be',scale:1.02,offsetY:-1,shadow:{x:0,y:6,blur:16,spread:0,color:'#183d752b'}},pressed:{background:outline?'#dbe6ff':'#183d94',scale:.98,offsetY:0,shadow:{x:0,y:2,blur:4,color:'#183d751a'}},focus:{shadow:{x:0,y:0,blur:0,spread:3,color:'#3769d366'}}},duration:180,easing:'ease-out',action:{type:'none'}});
 export const controlSchema=z.discriminatedUnion('type',[
- z.object({type:z.literal('search'),label:z.string().min(1).max(200),placeholder:z.string().max(200)}).strict(),
+ z.object({type:z.literal('search'),label:z.string().min(1).max(200),placeholder:z.string().max(200),iconSize:z.number().min(8).max(96).optional()}).strict(),
  z.object({type:z.literal('dropdown'),label:z.string().min(1).max(200),options:z.array(z.string().min(1).max(200)).min(1).max(50),defaultValue:z.string().max(200).optional()}).strict()
 ]);
 export type Control=z.infer<typeof controlSchema>;

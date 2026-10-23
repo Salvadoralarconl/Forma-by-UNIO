@@ -38,6 +38,7 @@ export function useEditor(platform: Platform, initialProject: Project) {
 
   const [pageId, setPageId] = useState(project.pages[0].id);
 
+  const [pendingTextEdit,setPendingTextEdit]=useState<string|null>(null);
   const [selected,setPrimary]=useState(project.pages[0].rootId);
   const [selectedIds,setSelectedIds]=useState<string[]>([project.pages[0].rootId]);
   const setSelected=useCallback((id:string)=>{setPrimary(id);setSelectedIds([id]);},[]);
@@ -183,7 +184,7 @@ export function useEditor(platform: Platform, initialProject: Project) {
 
       if (command.type === 'add'||command.type==='paste'||command.type==='addIcon') {
 
-        const added = next.present.nodes[command.parentId].children.at(-1); if (added) setSelected(added);
+        const added = next.present.nodes[command.parentId].children.at(-1); if (added) {setSelected(added);if(command.type==='add'&&next.present.nodes[added].kind==='text')setPendingTextEdit(added);}
 
       }
       if(command.type==='duplicatePage'){const at=next.present.pages.findIndex(page=>page.id===command.id),copy=next.present.pages[at+1];setPageId(copy.id);setSelected(copy.rootId);}
@@ -469,7 +470,7 @@ export function useEditor(platform: Platform, initialProject: Project) {
 
 
 
-  return { project, history, pageId, setPageId, selected, setSelected,selectedIds,selectNode,selectMany,clearSelection,buttonState,setButtonState, path, dirty, busy, error, setError, notice,
+  return { pendingTextEdit,setPendingTextEdit, project, history, pageId, setPageId, selected, setSelected,selectedIds,selectNode,selectMany,clearSelection,buttonState,setButtonState, path, dirty, busy, error, setError, notice,
 
     run, undo: undoCommand, redo: redoCommand, save,exportWebsite, open, newProject, add, addImage, addPageBackground, insertElement, mergeShapes, recovery, recover, discardRecovery,
 

@@ -6,7 +6,6 @@ test('double click edits canvas text, saves on blur, supports undo and Escape',a
  await page.getByRole('button',{name:'Text',exact:true}).click();
  await page.getByRole('button',{name:'Insert Heading',exact:true}).click();
  const text=page.getByTestId('artboard').locator('[data-kind="text"]');
- await text.dblclick();
  const edit=page.getByRole('textbox',{name:'Edit text',exact:true});
  await expect(edit).toBeFocused();await page.keyboard.type('My new heading');
  await page.getByTestId('artboard').click({position:{x:5,y:5}});

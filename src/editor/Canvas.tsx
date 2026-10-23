@@ -174,7 +174,7 @@ export function Canvas({ editor, preview, width, zoom,pageId,onPageBackground }:
     if(n.button)return <SemanticButton key={id} node={n} preview={preview} editingState={selected===id?editor.buttonState:'default'} props={props} onNavigate={(type,target)=>{const page=project.pages.find(p=>p.id===target);const nodeId=type==='page'?page?.rootId:target;if(page){editor.setPageId(page.id);editor.setSelected(page.rootId);}if(nodeId)document.querySelector(`[data-node-id="${nodeId}"]`)?.scrollIntoView({block:'start',behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});}}>{n.children.map(child=>renderNode(child,n))}</SemanticButton>;
     if (n.kind === 'image') return <img key={id} {...props} src={n.assetId ? urls[n.assetId] : undefined} alt={n.alt ?? ''} draggable={false} />;
 
-    if (n.kind === 'text') return <EditableText key={id} text={n.text??''} props={props} editable={!preview&&!n.locked&&!parent?.locked&&!project.nodes[rootId].locked} onCommit={text=>editor.run({type:'update',id,patch:{text}})}/>;
+    if (n.kind === 'text') return <EditableText key={id} autoStart={editor.pendingTextEdit===id} onStarted={()=>editor.setPendingTextEdit(null)} text={n.text??''} props={props} editable={!preview&&!n.locked&&!parent?.locked&&!project.nodes[rootId].locked} onCommit={text=>editor.run({type:'update',id,patch:{text}})}/>;
 
     return <div key={id} {...props}>
 
