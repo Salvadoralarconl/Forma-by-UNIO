@@ -4,7 +4,7 @@ test('Elements, editable shapes, actual union and dock tabs survive project roun
   const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('/');await openLegacyProject(page);
   await page.getByRole('button',{name:'Elements library',exact:true}).click();
   await page.getByRole('button',{name:'Insert Rectangle',exact:true}).click();
-  await page.getByLabel('Background',{exact:true}).fill('#d28c55');await page.getByLabel('Background',{exact:true}).press('Tab');
+  await page.getByLabel('Fill color',{exact:true}).fill('#d28c55');await page.getByLabel('Fill color',{exact:true}).press('Tab');
   await page.getByRole('button',{name:'Insert Circle',exact:true}).click();
   await page.getByLabel('Offset Y',{exact:true}).fill('-80');await page.getByLabel('Offset Y',{exact:true}).press('Tab');
   await page.getByLabel('Enable shadow',{exact:true}).check();

@@ -1,0 +1,4 @@
+import {test,expect} from '@playwright/test';
+test('color search exposes circle fill and updates the visible shape',async({page})=>{
+await page.goto('/');await page.getByRole('button',{name:'Elements library',exact:true}).click();await page.getByRole('button',{name:'Insert Circle',exact:true}).click();await page.getByRole('searchbox',{name:'Search properties',exact:true}).fill('color');const fill=page.getByLabel('Fill color',{exact:true});await expect(fill).toBeVisible();await fill.fill('#5c5c5c');await fill.press('Enter');await expect(page.getByTestId('artboard').locator('[data-kind=shape] path')).toHaveAttribute('fill','#5c5c5c');await page.getByRole('button',{name:'Undo',exact:true}).click();await expect(page.getByTestId('artboard').locator('[data-kind=shape] path')).toHaveAttribute('fill','#5b88d5');
+});

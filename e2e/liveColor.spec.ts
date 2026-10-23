@@ -1,12 +1,12 @@
 import {test,expect} from '@playwright/test';
 test('color changes reach the shape live, Enter applies typed color, and Undo restores it',async({page})=>{
  await page.goto('/');await page.getByRole('button',{name:'Elements library',exact:true}).click();await page.getByRole('button',{name:'Insert Rectangle',exact:true}).click();
- const fill=page.getByLabel('Background',{exact:true});await fill.fill('#ffffff');await fill.press('Enter');
- await page.getByRole('button',{name:'Open Background picker',exact:true}).click();
- await page.getByLabel('Background Hue',{exact:true}).fill('240');await page.getByLabel('Background Saturation',{exact:true}).fill('100');
+ const fill=page.getByLabel('Fill color',{exact:true});await fill.fill('#ffffff');await fill.press('Enter');
+ await page.getByRole('button',{name:'Open Fill color picker',exact:true}).click();
+ await page.getByLabel('Fill color Hue',{exact:true}).fill('240');await page.getByLabel('Fill color Saturation',{exact:true}).fill('100');
  const path=page.getByTestId('artboard').locator('[data-kind="shape"]>path').first();await expect(path).toHaveAttribute('fill','#0000ff');
- await page.getByLabel('Background Alpha',{exact:true}).fill('50');await expect(path).toHaveAttribute('fill','#0000ff80');
- await page.getByLabel('Background R',{exact:true}).fill('128');await page.getByLabel('Background R',{exact:true}).press('Enter');await expect(path).toHaveAttribute('fill','#8000ff80');
+ await page.getByLabel('Fill color Alpha',{exact:true}).fill('50');await expect(path).toHaveAttribute('fill','#0000ff80');
+ await page.getByLabel('Fill color R',{exact:true}).fill('128');await page.getByLabel('Fill color R',{exact:true}).press('Enter');await expect(path).toHaveAttribute('fill','#8000ff80');
  await fill.fill('#123456');await fill.press('Enter');await expect(path).toHaveAttribute('fill','#123456');
  await page.getByRole('button',{name:'Undo',exact:true}).click();await expect(path).toHaveAttribute('fill','#8000ff80');
 });

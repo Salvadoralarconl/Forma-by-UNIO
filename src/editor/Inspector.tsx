@@ -139,7 +139,7 @@ export function Inspector({ editor }: { editor: Editor }) {
 
       <div className="property-section"><h3>Appearance</h3>
 
-        <ColorField label={n.style.lineStyle?'Line color':'Background'} value={n.style.background??'transparent'} project={project} onCommit={(value,group)=>style({background:value},group)}/>
+        <ColorField label={n.style.lineStyle?'Line color':n.kind==='shape'?'Fill color':n.kind==='icon'?'Icon color':'Background'} value={n.style.background??'transparent'} project={project} onCommit={(value,group)=>style({background:value},group)}/>
 
         {(n.kind === 'text'||!!n.control) && <ColorField label="Text color" value={n.style.color??'#242a35'} project={project} onCommit={(value,group)=>style({color:value},group)}/>}
 
