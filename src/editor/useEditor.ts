@@ -52,7 +52,7 @@ export function useEditor(platform: Platform, initialProject: Project) {
 
   const [busy, setBusy] = useState(false);
 
-  const [buttonState,setButtonState]=useState<'default'|'hover'|'pressed'|'focus'>('default');
+  const [buttonState,setButtonState]=useState<'default'|'hover'|'pressed'|'focus'|'selected'>('default');
   useEffect(()=>{setButtonState('default');},[selected]);
   const [error, setError] = useState('');
 

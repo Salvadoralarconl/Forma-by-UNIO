@@ -1,3 +1,5 @@
+import {applyButtonSelection} from '../editor/buttonSelection';
+import buttonSelectionSource from '../editor/buttonSelection.ts?raw';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {createElement} from 'react';
 import {strToU8,zipSync} from 'fflate';
@@ -30,7 +32,8 @@ export function websiteExportFiles(input:Project):Record<string,Uint8Array>{
  const styles=css+'\n'+controlCss+'\n'+buttonCss(project);
  const markup=renderToStaticMarkup(createElement(Site,{project}));
  add('Open-preview.html','<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Website preview</title><link rel="stylesheet" href="site.css"></head><body>'+markup+'<script src="controls.js"></script></body></html>');
- add('controls.js','const formaSearch='+runPageSearch.toString()+';document.addEventListener("submit",function(event){const form=event.target;if(!(form instanceof HTMLFormElement)||!form.hasAttribute("data-page-search"))return;event.preventDefault();const output=form.querySelector("output");if(output)output.textContent=formaSearch(form);});');
+ add('src/editor/buttonSelection.ts',buttonSelectionSource);
+ add('controls.js','const formaButtonSelection='+applyButtonSelection.toString()+';document.addEventListener("click",function(event){const button=event.target instanceof Element?event.target.closest("[data-button-selection]"):null;if(button)formaButtonSelection(button);});const formaSearch='+runPageSearch.toString()+';document.addEventListener("submit",function(event){const form=event.target;if(!(form instanceof HTMLFormElement)||!form.hasAttribute("data-page-search"))return;event.preventDefault();const output=form.querySelector("output");if(output)output.textContent=formaSearch(form);});');
  add('src/editor/FunctionalControl.tsx',controlSource);add('src/editor/FunctionalControl.css',controlCss);add('src/editor/controlSearch.ts',controlSearchSource);add('src/editor/EditableText.tsx',editableTextSource);
  add('site.css',styles);
  // Public files are served at / in Vite, but the standalone preview uses public/assets.
