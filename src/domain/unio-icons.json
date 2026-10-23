@@ -381,5 +381,257 @@
       "tools connected",
       "unio"
     ]
+  },
+  {
+    "id": "unio-folder-closed-rounded",
+    "name": "Closed folder rounded",
+    "style": "rounded",
+    "paths": [
+      "M5 4H9Q10 4 11 5L12 6H19Q22 6 22 9V18Q22 21 19 21H5Q2 21 2 18V7Q2 4 5 4Z"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "fills": [
+      false
+    ],
+    "tags": [
+      "folder",
+      "directory",
+      "files",
+      "documents",
+      "rounded",
+      "round",
+      "soft",
+      "closed",
+      ""
+    ]
+  },
+  {
+    "id": "unio-folder-open-rounded",
+    "name": "Open folder rounded",
+    "style": "rounded",
+    "paths": [
+      "M3 12V7Q3 4 6 4H9Q10 4 11 5L12 6H18Q21 6 21 9V10 M5 10H20Q23 10 22 13L20 19Q19.5 21 17 21H5Q3 21 2.7 19L2 13Q1.5 10 5 10Z"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "fills": [
+      false
+    ],
+    "tags": [
+      "folder",
+      "directory",
+      "files",
+      "documents",
+      "rounded",
+      "round",
+      "soft",
+      "open",
+      ""
+    ]
+  },
+  {
+    "id": "unio-folder-plus-rounded",
+    "name": "Add folder rounded",
+    "style": "rounded",
+    "paths": [
+      "M5 4H9Q10 4 11 5L12 6H19Q22 6 22 9V18Q22 21 19 21H5Q2 21 2 18V7Q2 4 5 4Z",
+      "M12 10V17 M8.5 13.5H15.5"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "fills": [
+      false,
+      false
+    ],
+    "tags": [
+      "folder",
+      "directory",
+      "files",
+      "documents",
+      "rounded",
+      "round",
+      "soft",
+      "plus",
+      "new create add"
+    ]
+  },
+  {
+    "id": "unio-folder-minus-rounded",
+    "name": "Remove folder rounded",
+    "style": "rounded",
+    "paths": [
+      "M5 4H9Q10 4 11 5L12 6H19Q22 6 22 9V18Q22 21 19 21H5Q2 21 2 18V7Q2 4 5 4Z",
+      "M8.5 13.5H15.5"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "fills": [
+      false,
+      false
+    ],
+    "tags": [
+      "folder",
+      "directory",
+      "files",
+      "documents",
+      "rounded",
+      "round",
+      "soft",
+      "minus",
+      ""
+    ]
+  },
+  {
+    "id": "unio-folder-check-rounded",
+    "name": "Checked folder rounded",
+    "style": "rounded",
+    "paths": [
+      "M5 4H9Q10 4 11 5L12 6H19Q22 6 22 9V18Q22 21 19 21H5Q2 21 2 18V7Q2 4 5 4Z",
+      "M8 13.5L11 16.5L16 11.5"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "fills": [
+      false,
+      false
+    ],
+    "tags": [
+      "folder",
+      "directory",
+      "files",
+      "documents",
+      "rounded",
+      "round",
+      "soft",
+      "check",
+      ""
+    ]
+  },
+  {
+    "id": "unio-folder-favorite-rounded",
+    "name": "Favorite folder rounded",
+    "style": "rounded",
+    "paths": [
+      "M5 4H9Q10 4 11 5L12 6H19Q22 6 22 9V18Q22 21 19 21H5Q2 21 2 18V7Q2 4 5 4Z",
+      "M12 17L8.5 13.5C6 11 10 8.5 12 11C14 8.5 18 11 15.5 13.5Z"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "fills": [
+      false,
+      false
+    ],
+    "tags": [
+      "folder",
+      "directory",
+      "files",
+      "documents",
+      "rounded",
+      "round",
+      "soft",
+      "favorite",
+      "heart favorites"
+    ]
+  },
+  {
+    "id": "unio-folder-upload-rounded",
+    "name": "Upload folder rounded",
+    "style": "rounded",
+    "paths": [
+      "M5 4H9Q10 4 11 5L12 6H19Q22 6 22 9V18Q22 21 19 21H5Q2 21 2 18V7Q2 4 5 4Z",
+      "M12 17V10 M8.5 13.5L12 10L15.5 13.5"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "fills": [
+      false,
+      false
+    ],
+    "tags": [
+      "folder",
+      "directory",
+      "files",
+      "documents",
+      "rounded",
+      "round",
+      "soft",
+      "upload",
+      ""
+    ]
+  },
+  {
+    "id": "unio-folder-lock-rounded",
+    "name": "Locked folder rounded",
+    "style": "rounded",
+    "paths": [
+      "M5 4H9Q10 4 11 5L12 6H19Q22 6 22 9V18Q22 21 19 21H5Q2 21 2 18V7Q2 4 5 4Z",
+      "M9 13V12Q9 9 12 9Q15 9 15 12V13 M9 13H15Q16 13 16 14V17Q16 18 15 18H9Q8 18 8 17V14Q8 13 9 13Z"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "fills": [
+      false,
+      false
+    ],
+    "tags": [
+      "folder",
+      "directory",
+      "files",
+      "documents",
+      "rounded",
+      "round",
+      "soft",
+      "lock",
+      ""
+    ]
+  },
+  {
+    "id": "unio-folder-filled-rounded",
+    "name": "Filled folder rounded",
+    "style": "rounded",
+    "paths": [
+      "M5 4H9Q10 4 11 5L12 6H19Q22 6 22 9V18Q22 21 19 21H5Q2 21 2 18V7Q2 4 5 4Z"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "fills": [
+      true
+    ],
+    "tags": [
+      "folder",
+      "directory",
+      "files",
+      "documents",
+      "rounded",
+      "round",
+      "soft",
+      "filled",
+      ""
+    ]
+  },
+  {
+    "id": "unio-folder-filled-open-rounded",
+    "name": "Filled open folder rounded",
+    "style": "rounded",
+    "paths": [
+      "M3 12V7Q3 4 6 4H9Q10 4 11 5L12 6H18Q21 6 21 9V10 M5 10H20Q23 10 22 13L20 19Q19.5 21 17 21H5Q3 21 2.7 19L2 13Q1.5 10 5 10Z"
+    ],
+    "pack": "UNIO",
+    "origin": "new",
+    "fills": [
+      true
+    ],
+    "tags": [
+      "folder",
+      "directory",
+      "files",
+      "documents",
+      "rounded",
+      "round",
+      "soft",
+      "filled-open",
+      ""
+    ]
   }
 ]
