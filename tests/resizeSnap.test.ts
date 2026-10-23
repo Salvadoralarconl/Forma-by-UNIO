@@ -31,3 +31,5 @@ it('shows equal page insets only near page sides during side resize',()=>{
  expect(result.frame.height).toBe(120);expect(result.guides.gaps.map(g=>g.value)).toEqual([20,20]);
  expect(snapResizeFrame({x:100,y:100,width:120,height:100},'s',0,17,false,500,500,[],6).guides.gaps).toHaveLength(0);
 });
+
+it('allows shapes to shrink to one pixel when their minimum permits it',()=>{const result=snapResizeFrame(f,'se',-500,-500,false,1000,800,[],6,{width:1,height:1});expect(result.frame).toEqual({...f,width:1,height:1});});

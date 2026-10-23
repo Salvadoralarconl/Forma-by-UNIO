@@ -4,7 +4,7 @@ import {crossAxisGapCandidates} from './crossAxisSpacing';
 import {pageCornerGapCandidates} from './pageCornerSpacing';
 export type Handle='nw'|'n'|'ne'|'e'|'se'|'s'|'sw'|'w';
 export function resizeFreeFrame(f:Frame,handle:Handle,dx:number,dy:number,locked:boolean,pageWidth:number,pageHeight:number,minimum={width:12,height:12}):Frame{
- const minWidth=Math.max(12,minimum.width),minHeight=Math.max(12,minimum.height);
+ const minWidth=Math.max(1,minimum.width),minHeight=Math.max(1,minimum.height);
  const west=handle.includes('w'),east=handle.includes('e'),north=handle.includes('n'),south=handle.includes('s'),corner=(west||east)&&(north||south),right=Math.max(pageWidth,f.x+f.width),bottom=Math.max(pageHeight,f.y+f.height);
  let w=Math.max(minWidth,f.width+(east?dx:west?-dx:0)),h=Math.max(minHeight,f.height+(south?dy:north?-dy:0));
  const maxW=west?f.x+f.width:east?right-f.x:2*Math.min(f.x+f.width/2,right-f.x-f.width/2),maxH=north?f.y+f.height:south?bottom-f.y:2*Math.min(f.y+f.height/2,bottom-f.y-f.height/2);
@@ -21,7 +21,7 @@ export function snapResizeFrame(f:Frame,handle:Handle,dx:number,dy:number,locked
  let frame=base,best=Infinity,gaps:GapGuide[]=[];
  for(const axis of ['x','y'] as const){if(axis==='x'?!horizontal:!vertical)continue;const negative=axis==='x'?handle.includes('w'):handle.includes('n'),start=axis==='x'?f.x:f.y,size=axis==='x'?f.width:f.height,anchor=negative?start+size:start;
   for(const target of targets[axis])for(const center of [false,true]){
-   const requested=(negative?anchor-target:target-anchor)*(center?2:1);if(requested<12)continue;
+   const requested=(negative?anchor-target:target-anchor)*(center?2:1);if(requested<Math.max(1,axis==='x'?minimum.width:minimum.height))continue;
    const w=axis==='x'?requested:ratio?f.width*requested/f.height:base.width,h=axis==='y'?requested:ratio?f.height*requested/f.width:base.height;
    const candidate=resizeFreeFrame(f,handle,(handle.includes('w')?-1:1)*(w-f.width),(handle.includes('n')?-1:1)*(h-f.height),locked,width,height,minimum);
    const shift=Math.max(horizontal?Math.abs(coordinates(candidate,'x')[0]-coordinates(base,'x')[0]):0,vertical?Math.abs(coordinates(candidate,'y')[0]-coordinates(base,'y')[0]):0);
@@ -31,7 +31,7 @@ export function snapResizeFrame(f:Frame,handle:Handle,dx:number,dy:number,locked
  for(const candidate of [...pageEdgeGapCandidates(base,peers,width,height,tolerance),...crossAxisGapCandidates(base,peers,tolerance),...pageCornerGapCandidates(base,width,height,tolerance,tolerance*64/6)]){
   const axis=candidate.axis,active=axis==='x'?horizontal:vertical,negative=axis==='x'?handle.includes('w'):handle.includes('n');if(!active||candidate.edge!==(negative?'start':'end'))continue;
   const anchor=axis==='x'?(negative?f.x+f.width:f.x):(negative?f.y+f.height:f.y),requested=negative?anchor-candidate.coordinate:candidate.coordinate-anchor;
-  if(requested<12)continue;
+  if(requested<Math.max(1,axis==='x'?minimum.width:minimum.height))continue;
   const w=axis==='x'?requested:ratio?f.width*requested/f.height:base.width,h=axis==='y'?requested:ratio?f.height*requested/f.width:base.height;
   const next=resizeFreeFrame(f,handle,(handle.includes('w')?-1:1)*(w-f.width),(handle.includes('n')?-1:1)*(h-f.height),locked,width,height,minimum);
   const shift=Math.max(horizontal?Math.abs(coordinates(next,'x')[0]-coordinates(base,'x')[0]):0,vertical?Math.abs(coordinates(next,'y')[0]-coordinates(base,'y')[0]):0),valid=validateGapGuides(candidate.guides,next);

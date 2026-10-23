@@ -1,0 +1,4 @@
+import {test,expect} from '@playwright/test';
+test('circle can resize below twelve pixels down to one pixel',async({page})=>{
+await page.goto('/');await page.getByRole('button',{name:'Elements library',exact:true}).click();await page.getByRole('button',{name:'Insert Circle',exact:true}).click();for(const label of ['Position WIDTH','Position HEIGHT']){await page.getByLabel(label,{exact:true}).fill('8');await page.getByLabel(label,{exact:true}).press('Enter');}const shape=page.getByTestId('artboard').locator('[data-kind=shape]');await page.getByRole('button',{name:'Resize selected layer',exact:true}).focus();await page.keyboard.press('Shift+ArrowLeft');await expect(shape).toHaveCSS('width','1px');await expect(shape).toHaveCSS('height','1px');await page.getByRole('button',{name:'Undo',exact:true}).click();await expect(shape).toHaveCSS('width','8px');
+});
