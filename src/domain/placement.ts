@@ -56,7 +56,7 @@ export function snapFrame(frame:Frame,others:Frame[],width:number,height:number,
  const x=nearest([frame.x,frame.x+frame.width/2,frame.x+frame.width],xs),y=nearest([frame.y,frame.y+frame.height/2,frame.y+frame.height],ys);
  const pageCorner=pageCornerGapCandidates(frame,width,height,tolerance,tolerance*64/6)[0];
  const cross=[...crossAxisGapCandidates(frame,others,tolerance),...(pageCorner?[pageCorner]:[])].sort((a,b)=>Math.abs(a.delta)-Math.abs(b.delta));
- const closest=(axis:'x'|'y')=>{const same=spacingCandidate(frame,others,axis,tolerance),other=cross.find(c=>c.axis===axis);return other&&(!same||Math.abs(other.delta)<Math.abs(same.delta))?{delta:other.delta,gaps:other.guides}:same;};
+ const closest=(axis:'x'|'y')=>{const same=spacingCandidate(frame,others,axis,tolerance),edges=axis==='x'?[{x:0,y:0,width:0,height},{x:width,y:0,width:0,height}]:[{x:0,y:0,width,height:0},{x:0,y:height,width,height:0}],boundary=spacingCandidate(frame,[...others,...edges],axis,tolerance),best=boundary&&(!same||Math.abs(boundary.delta)<Math.abs(same.delta))?boundary:same,other=cross.find(c=>c.axis===axis);return other&&(!best||Math.abs(other.delta)<Math.abs(best.delta))?{delta:other.delta,gaps:other.guides}:best;};
  const gx=closest('x'),gy=closest('y');
  const useX=gx&&(!x||Math.abs(gx.delta)<Math.abs(x.delta)),useY=gy&&(!y||Math.abs(gy.delta)<Math.abs(y.delta));
  const dx=useX?gx.delta:x?.delta??0,dy=useY?gy.delta:y?.delta??0;

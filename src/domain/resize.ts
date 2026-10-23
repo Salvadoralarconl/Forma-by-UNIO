@@ -1,3 +1,4 @@
+import {pageEdgeGapCandidates} from './pageEdgeSpacing';
 import {validateGapGuides,type Frame,type GapGuide} from './placement';
 import {crossAxisGapCandidates} from './crossAxisSpacing';
 import {pageCornerGapCandidates} from './pageCornerSpacing';
@@ -27,7 +28,7 @@ export function snapResizeFrame(f:Frame,handle:Handle,dx:number,dy:number,locked
    if(Math.abs(coordinates(candidate,axis)[center?1:0]-target)<.01&&shift<=tolerance&&shift<best){frame=candidate;best=shift;}
   }
  }
- for(const candidate of [...crossAxisGapCandidates(base,peers,tolerance),...pageCornerGapCandidates(base,width,height,tolerance,tolerance*64/6)]){
+ for(const candidate of [...pageEdgeGapCandidates(base,peers,width,height,tolerance),...crossAxisGapCandidates(base,peers,tolerance),...pageCornerGapCandidates(base,width,height,tolerance,tolerance*64/6)]){
   const axis=candidate.axis,active=axis==='x'?horizontal:vertical,negative=axis==='x'?handle.includes('w'):handle.includes('n');if(!active||candidate.edge!==(negative?'start':'end'))continue;
   const anchor=axis==='x'?(negative?f.x+f.width:f.x):(negative?f.y+f.height:f.y),requested=negative?anchor-candidate.coordinate:candidate.coordinate-anchor;
   if(requested<12)continue;

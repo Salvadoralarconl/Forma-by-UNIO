@@ -17,13 +17,17 @@ Click the paint-bucket control beside a page, or click empty page space, to open
 
 Drag an Elements, Properties or Layers tab to either panel column to dock it, or into the workspace to float it. Blue docking targets match each column's current width. Escape cancels a drag; placement is remembered on this device. Alt+Left/Right docks the focused tab and Alt+F floats it.
 
-Double-click text or a button label to edit it in place. Click outside to save or Escape to cancel. Button Properties include font controls and individual corner radii. Free text resize handles scale the font and box together; button resizing stops at its label/icon dimensions.
+Double-click text or a button label to edit it in place. Click outside to save or Escape to cancel. Button Properties include font controls, left/center/right text alignment, individual corner radii, and a transparent text-only mode that stays transparent in every interaction state. Free text resize handles scale the font and box together; button resizing stops at its label/icon dimensions.
+
+The Buttons category contains one customizable Button, a Search bar that finds and highlights text on its own page, and a Dropdown for selecting configured options. Configure labels, search placeholders, dropdown options and default selection in Properties. Double-click their displayed text in Design to edit it directly. Preview and website exports provide the actual input behavior. Standalone HTML includes a local controls.js file for page search; no service is needed.
+
+Lines stretch across their resize boxes and use edge handles instead of corner circles. Equal spacing can snap between an object, the page edge and a neighboring object when moving or resizing.
 
 ## Included tools
 
 Compact dark native shell; click-held menus with keyboard arrows/Escape; resizable tabbed Elements/Properties/Layers docks; canvas wheel zoom and middle-button pan in Design. Every category adapts to dock width: small tiles on wider docks and thumbnail/label lists on narrow docks. Search reveals matches across closed groups and clearing restores expansion state.
 
-584 exposed presets:20Shapes,12Buttons,536uniqueIcons,6Text,4Cards,6Sections. Five Layout factories remain withheld pending the user’s row/column placement-space clarification. The icons comprise512distinct Lucide designs plus24new UNIO designs. UNIO filter57 includes33shared Lucide designs already referenced by Folio/UNIO; those are not counted twice. Help includes ISC attribution and the exact reference manifest.
+575 exposed elements: 20 Shapes, one default Button plus Search bar and Dropdown, 536 unique Icons, 6 Text, 4 Cards and 6 Sections. Older button preset factories remain available for existing projects. Five Layout factories remain withheld pending the user’s row/column placement-space clarification. The icons comprise512distinct Lucide designs plus24new UNIO designs. UNIO filter57 includes33shared Lucide designs already referenced by Folio/UNIO; those are not counted twice. Help includes ISC attribution and the exact reference manifest.
 
 Local SVG pack import supports individual/multiple monochrome SVG files, not ZIP/font/plugin packs. Strict path/basic-shape subset; no scripts, entities, handlers, external resources, foreignObject, transforms, gradients or text.32KiB/file,100files/512KiB per import,1–40paths/icon,400imported icons/2MB local library. Supported fill rules and stroke paint are preserved. Used geometry is embedded in .forma and exports, so projects do not require the installed library.
 

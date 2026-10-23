@@ -28,7 +28,7 @@ export type Command =
 
   | { type: 'mergeShapes'; id: string; otherId: string; offset: { x: number; y: number }; placement?:{x:number;y:number}; measurements?:{first:{width:number;height:number};second:{width:number;height:number}};availableWidth?:number }
 
-  | { type: 'update'; id: string; patch: Partial<Pick<DesignNode, 'name' | 'text' | 'alt' | 'hidden' | 'locked' | 'aspectLocked' | 'button'>>; style?: Partial<NodeStyle> }
+  | { type: 'update'; id: string; patch: Partial<Pick<DesignNode, 'name' | 'text' | 'alt' | 'hidden' | 'locked' | 'aspectLocked' | 'button' | 'control'>>; style?: Partial<NodeStyle> }
 
   | { type: 'delete' | 'duplicate'; id: string }
 
@@ -121,14 +121,14 @@ export function applyCommand(project: Project, command: Command): Project {
 
     }
 
-    case 'addIcon': {const data=localIconSchema.parse(command.icon),parent=p.nodes[command.parentId];if(!parent||parent.kind!=='container'||parent.locked||parent.button)throw new Error('Choose an unlocked container.');const n=makeNode('icon',newId(),data.name,{width:32,height:32,minHeight:0,background:'#242a35',borderRadius:0});n.iconPaths=data.paths;n.iconPaint=data.paint;n.iconFills=data.fills??data.paths.map(()=>data.style==='filled');n.iconViewBox=data.viewBox;n.annotations=[{id:newId(),text:`Icon pack: ${data.pack}. Imported geometry embedded in project.`}];p.nodes[n.id]=n;parent.children.push(n.id);break;}
+    case 'addIcon': {const data=localIconSchema.parse(command.icon),parent=p.nodes[command.parentId];if(!parent||parent.kind!=='container'||parent.locked||(parent.button||parent.control))throw new Error('Choose an unlocked container.');const n=makeNode('icon',newId(),data.name,{width:32,height:32,minHeight:0,background:'#242a35',borderRadius:0});n.iconPaths=data.paths;n.iconPaint=data.paint;n.iconFills=data.fills??data.paths.map(()=>data.style==='filled');n.iconViewBox=data.viewBox;n.annotations=[{id:newId(),text:`Icon pack: ${data.pack}. Imported geometry embedded in project.`}];p.nodes[n.id]=n;parent.children.push(n.id);break;}
     case 'paste': {pasteFragment(p,command.parentId,command.fragment);break;}
 
     case 'add': {
 
       const parent = p.nodes[command.parentId];
 
-      if (!parent || parent.kind !== 'container' || parent.locked||parent.button) throw new Error('Choose an unlocked container.');
+      if (!parent || parent.kind !== 'container' || parent.locked||(parent.button||parent.control)) throw new Error('Choose an unlocked container.');
 
       if(command.preset){const built=createPreset(command.preset);Object.assign(p.nodes,built.nodes);parent.children.push(built.root.id);break;}
 
@@ -298,7 +298,7 @@ export function applyCommand(project: Project, command: Command): Project {
 
       const target = p.nodes[command.parentId];
 
-      if (!target || target.kind !== 'container' || target.locked||target.button) throw new Error('Choose an unlocked container.');
+      if (!target || target.kind !== 'container' || target.locked||(target.button||target.control)) throw new Error('Choose an unlocked container.');
 
       const contains = (id: string): boolean => id === command.parentId || p.nodes[id].children.some(contains);
 
@@ -323,7 +323,7 @@ export function applyCommand(project: Project, command: Command): Project {
 
   for(const parent of Object.values(p.nodes))if(parent.layoutMode==='free')for(const id of parent.children){const n=p.nodes[id];if(n.frame)continue;const page=p.pages.find(page=>page.rootId===parent.id),w=page?.width??1440,h=parent.style.height??780;const size=initialFrameSize(n),width=Math.min(w,size.width),height=Math.min(h,size.height);const point=(command.type==='add'||command.type==='addIcon')&&command.parentId===parent.id?command.point:undefined;n.frame={x:Math.max(0,Math.min(w-width,point?.x??24)),y:Math.max(0,Math.min(h-height,point?.y??24)),width,height};p.schemaVersion=2;}
   const activeNodes=new Set<string>();const collectActive=(id:string)=>{activeNodes.add(id);p.nodes[id].children.forEach(collectActive);};p.pages.filter(page=>!page.archived).forEach(page=>collectActive(page.rootId));
-  for(const n of Object.values(p.nodes)){if(n.button){p.schemaVersion=2;const action=n.button.action;if(action.type==='page'&&action.target&&!p.pages.some(page=>page.id===action.target&&!page.archived)||action.type==='section'&&action.target&&!activeNodes.has(action.target))n.button.action={type:'none'};}}
+  for(const n of Object.values(p.nodes)){if(n.control)p.schemaVersion=2;if(n.button){p.schemaVersion=2;const action=n.button.action;if(action.type==='page'&&action.target&&!p.pages.some(page=>page.id===action.target&&!page.archived)||action.type==='section'&&action.target&&!activeNodes.has(action.target))n.button.action={type:'none'};}}
   p.revision++; p.updatedAt = new Date().toISOString();
 
   return validateProject(p);

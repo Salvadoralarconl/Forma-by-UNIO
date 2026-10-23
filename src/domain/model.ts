@@ -81,12 +81,17 @@ export const assetSchema = z.object({
 export type Asset = z.infer<typeof assetSchema>;
 
 export const buttonStateSchema=z.object({background:color.optional(),color:color.optional(),scale:z.number().min(.5).max(1.5).optional(),offsetX:z.number().min(-50).max(50).optional(),offsetY:z.number().min(-50).max(50).optional(),shadow:styleSchema.shape.shadow}).strict();
-export const buttonSchema=z.object({states:z.object({hover:buttonStateSchema,pressed:buttonStateSchema,focus:buttonStateSchema}).strict(),duration:z.number().min(0).max(2000),easing:z.enum(['ease','ease-in','ease-out','ease-in-out','linear']),action:z.object({type:z.enum(['none','link','page','section']),target:z.string().max(2048).optional()}).strict()}).strict().superRefine((button,ctx)=>{if(button.action.type==='link'&&button.action.target){try{const url=new URL(button.action.target);if(!['https:','http:'].includes(url.protocol)||url.username||url.password)throw new Error();}catch{ctx.addIssue({code:'custom',message:'Use an http or https link without credentials.'});}}});
+export const buttonSchema=z.object({textOnly:z.boolean().optional(),states:z.object({hover:buttonStateSchema,pressed:buttonStateSchema,focus:buttonStateSchema}).strict(),duration:z.number().min(0).max(2000),easing:z.enum(['ease','ease-in','ease-out','ease-in-out','linear']),action:z.object({type:z.enum(['none','link','page','section']),target:z.string().max(2048).optional()}).strict()}).strict().superRefine((button,ctx)=>{if(button.action.type==='link'&&button.action.target){try{const url=new URL(button.action.target);if(!['https:','http:'].includes(url.protocol)||url.username||url.password)throw new Error();}catch{ctx.addIssue({code:'custom',message:'Use an http or https link without credentials.'});}}});
 export type ButtonBehavior=z.infer<typeof buttonSchema>;
 export const defaultButtonBehavior=(outline=false):ButtonBehavior=>({states:{hover:{background:outline?'#e9efff':'#2455be',scale:1.02,offsetY:-1,shadow:{x:0,y:6,blur:16,spread:0,color:'#183d752b'}},pressed:{background:outline?'#dbe6ff':'#183d94',scale:.98,offsetY:0,shadow:{x:0,y:2,blur:4,color:'#183d751a'}},focus:{shadow:{x:0,y:0,blur:0,spread:3,color:'#3769d366'}}},duration:180,easing:'ease-out',action:{type:'none'}});
+export const controlSchema=z.discriminatedUnion('type',[
+ z.object({type:z.literal('search'),label:z.string().min(1).max(200),placeholder:z.string().max(200)}).strict(),
+ z.object({type:z.literal('dropdown'),label:z.string().min(1).max(200),options:z.array(z.string().min(1).max(200)).min(1).max(50),defaultValue:z.string().max(200).optional()}).strict()
+]);
+export type Control=z.infer<typeof controlSchema>;
 const nodeSchema = z.object({
 
-  button:buttonSchema.optional(),
+  button:buttonSchema.optional(),control:controlSchema.optional(),
   id, kind: z.enum(['container', 'text', 'image', 'shape','icon']), name: z.string().min(1).max(200),
 
   children: z.array(id).max(2000), text: z.string().max(100_000).optional(),
@@ -219,6 +224,8 @@ export function validateProject(input: unknown): Project {
 
     if (n.kind === 'shape' && (!n.geometry || n.geometry.type === 'union' && !n.geometry.polygons?.length)) throw new Error('Shape geometry is missing.');
 
+    if(n.control&&(n.kind!=='container'||n.children.length||n.button||insideButton))throw new Error('Controls must be standalone container layers.');
+    if(n.control?.type==='dropdown'&&n.control.defaultValue&&!n.control.options.includes(n.control.defaultValue))throw new Error('Choose a default dropdown value from its options.');
     if(n.button&&insideButton)throw new Error('Interactive buttons cannot be nested.');
     if(n.button&&n.kind!=='container')throw new Error('Buttons must be container compositions.');
     if(n.button?.action.type==='page'&&n.button.action.target&&!p.pages.some(page=>page.id===n.button!.action.target&&!page.archived))throw new Error('Button page target is missing.');
@@ -259,4 +266,4 @@ export function parentOf(p: Project, nodeId: string): DesignNode | undefined {
 }
 
 
-export function insertionParent(p:Project,id:string):DesignNode|undefined{let n=p.nodes[id];if(n?.kind==='container'&&!n.button)return n;let parent=n?parentOf(p,n.id):undefined;while(parent?.button)parent=parentOf(p,parent.id);return parent;}
+export function insertionParent(p:Project,id:string):DesignNode|undefined{let n=p.nodes[id];if(n?.kind==='container'&&!n.button&&!n.control)return n;let parent=n?parentOf(p,n.id):undefined;while(parent?.button||parent?.control)parent=parentOf(p,parent.id);return parent;}

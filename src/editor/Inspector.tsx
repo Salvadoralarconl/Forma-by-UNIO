@@ -1,3 +1,4 @@
+import {ControlInspector} from './ControlInspector';
 import {PageBackgroundInspector} from './PageBackgroundInspector';
 import { ArrowDown, ArrowUp, Copy, LockKeyhole, Trash2, UnlockKeyhole } from 'lucide-react';
 
@@ -72,7 +73,7 @@ export function Inspector({ editor }: { editor: Editor }) {
 
     <div className="inspector-title"><h2>Properties</h2><span className="tag">{n.kind}</span></div>
 
-    <ButtonInspector editor={editor}/><PositionPanel editor={editor}/>
+    <ControlInspector editor={editor}/><ButtonInspector editor={editor}/><PositionPanel editor={editor}/>
     <fieldset disabled={editor.busy} className="properties-fields">
 
       <div className="property-section"><Field label="Layer name" value={n.name} onCommit={name => run({ type: 'update', id: selected, patch: { name } })} />
@@ -139,7 +140,7 @@ export function Inspector({ editor }: { editor: Editor }) {
 
         <ColorField label="Background" value={n.style.background??'transparent'} project={project} onCommit={(value,group)=>style({background:value},group)}/>
 
-        {n.kind === 'text' && <ColorField label="Text color" value={n.style.color??'#242a35'} project={project} onCommit={(value,group)=>style({color:value},group)}/>}
+        {(n.kind === 'text'||!!n.control) && <ColorField label="Text color" value={n.style.color??'#242a35'} project={project} onCommit={(value,group)=>style({color:value},group)}/>}
 
         <Field label="Opacity %" type="number" value={(n.style.opacity??1)*100} min={0} max={100} onCommit={value=>style({opacity:Number(value)/100})}/><div className="field-grid"><fieldset disabled={n.kind==='shape'&&n.geometry?.type!=='rectangle'}>{number('borderRadius', 0, 'Radius', 500)}</fieldset>{number('borderWidth', 0, 'Border', 20)}</div>{n.kind==='shape'&&n.geometry?.type!=='rectangle'&&<small className="element-hint">Adjustable corner rounding currently supports rectangles. Other shapes keep their own geometry.</small>}{n.button&&<div className="field-grid">{number('borderTopLeftRadius',n.style.borderRadius??0,'Top-left radius',500)}{number('borderTopRightRadius',n.style.borderRadius??0,'Top-right radius',500)}{number('borderBottomRightRadius',n.style.borderRadius??0,'Bottom-right radius',500)}{number('borderBottomLeftRadius',n.style.borderRadius??0,'Bottom-left radius',500)}</div>}<label className="field"><span>Border style</span><select aria-label="Border style" value={n.style.borderWidth?n.style.borderStyle??'solid':'none'} onChange={e=>style(e.target.value==='none'?{borderWidth:0}:{borderStyle:e.target.value as NodeStyle['borderStyle'],borderWidth:n.style.borderWidth||2})}><option value="none">None</option><option value="solid">Solid</option><option value="dashed">Long dashed</option><option value="short-dashed">Short dashed</option><option value="dotted">Dotted</option></select></label>
 

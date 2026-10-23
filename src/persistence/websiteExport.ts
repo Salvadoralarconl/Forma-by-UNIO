@@ -12,6 +12,11 @@ import shapesSource from '../domain/shapes.ts?raw';
 import modelSource from '../domain/model.ts?raw';
 import pageBoundsSource from '../domain/pageBounds.ts?raw';
 import pageBackgroundSource from '../editor/PageBackground.tsx?raw';
+import controlSource from '../editor/FunctionalControl.tsx?raw';
+import controlSearchSource from '../editor/controlSearch.ts?raw';
+import controlCss from '../editor/FunctionalControl.css?raw';
+import editableTextSource from '../editor/EditableText.tsx?raw';
+import {runPageSearch} from '../editor/controlSearch';
 import iconSource from '../domain/iconPacks.ts?raw';
 import license from '../domain/icon-license.txt?raw';
 import attribution from '../../docs/icon-sources.json?raw';
@@ -22,9 +27,11 @@ export function websiteExportFiles(input:Project):Record<string,Uint8Array>{
  const add=(path:string,value:string|Uint8Array)=>{const bytes=typeof value==='string'?strToU8(value):value;total+=bytes.length;if(total>MAX_ARCHIVE)throw new Error('Website export exceeds 64 MB.');files[path]=bytes;};
  for(const a of Object.values(project.assets)){const bytes=base64ToBytes(a.data);verifyRaster(bytes,a.mime);add(assetPath(a.id,a.mime),bytes);}
  const data={...project,assets:Object.fromEntries(Object.entries(project.assets).map(([id,a])=>[id,{...a,data:''}]))};
- const styles=css+'\n'+buttonCss(project);
+ const styles=css+'\n'+controlCss+'\n'+buttonCss(project);
  const markup=renderToStaticMarkup(createElement(Site,{project}));
- add('Open-preview.html','<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Website preview</title><link rel="stylesheet" href="site.css"></head><body>'+markup+'</body></html>');
+ add('Open-preview.html','<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Website preview</title><link rel="stylesheet" href="site.css"></head><body>'+markup+'<script src="controls.js"></script></body></html>');
+ add('controls.js','const formaSearch='+runPageSearch.toString()+';document.addEventListener("submit",function(event){const form=event.target;if(!(form instanceof HTMLFormElement)||!form.hasAttribute("data-page-search"))return;event.preventDefault();const output=form.querySelector("output");if(output)output.textContent=formaSearch(form);});');
+ add('src/editor/FunctionalControl.tsx',controlSource);add('src/editor/FunctionalControl.css',controlCss);add('src/editor/controlSearch.ts',controlSearchSource);add('src/editor/EditableText.tsx',editableTextSource);
  add('site.css',styles);
  // Public files are served at / in Vite, but the standalone preview uses public/assets.
  add('src/export/Site.tsx',siteSource.replace('`public/assets/','`assets/'));

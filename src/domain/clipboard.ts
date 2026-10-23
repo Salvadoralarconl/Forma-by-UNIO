@@ -10,7 +10,7 @@ export function copyFragment(p:Project,rootId:string):Fragment{
   const visit=(id:string)=>{const n=p.nodes[id];nodes[id]=structuredClone(n);if(n.assetId)assets[n.assetId]=structuredClone(p.assets[n.assetId]);n.children.forEach(visit);};visit(rootId);return validateFragment({version:1,rootId,nodes,assets});
 }
 export function pasteFragment(p:Project,parentId:string,input:unknown):string{
-  const f=validateFragment(input),parent=p.nodes[parentId];if(!parent||parent.kind!=='container'||parent.locked||parent.button)throw new Error('Choose an unlocked container for paste.');
+  const f=validateFragment(input),parent=p.nodes[parentId];if(!parent||parent.kind!=='container'||parent.locked||(parent.button||parent.control))throw new Error('Choose an unlocked container for paste.');
   const ids=new Map(Object.keys(f.nodes).map(id=>[id,newId()])),assetIds=new Map<string,string>();
   for(const asset of Object.values(f.assets)){const existing=p.assets[asset.id];const id=!existing||JSON.stringify(existing)===JSON.stringify(asset)?asset.id:newId();p.assets[id]={...asset,id};assetIds.set(asset.id,id);}
   for(const n of Object.values(f.nodes)){const id=ids.get(n.id)!;p.nodes[id]={...structuredClone(n),id,children:n.children.map(child=>ids.get(child)!),assetId:n.assetId?assetIds.get(n.assetId):undefined,annotations:n.annotations.map(a=>({...a,id:newId()}))};}

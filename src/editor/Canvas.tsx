@@ -1,3 +1,4 @@
+import {FunctionalControl} from './FunctionalControl';
 import {PageBackground} from './PageBackground';
 import {EditableText} from './EditableText';
 import { type CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
@@ -75,6 +76,7 @@ export function nodeStyle(node: DesignNode,parent?:DesignNode): CSSProperties {
 
     boxShadow:s.shadow&&node.kind!=='shape'?`${s.shadow.x}px ${s.shadow.y}px ${s.shadow.blur}px ${s.shadow.spread??0}px ${s.shadow.color}`:undefined,
 
+    ...(node.button?.textOnly?{background:'transparent',border:undefined,boxShadow:undefined}:{}),
     ...(free?{...(node.button?{padding:0}:{}),position:'absolute',left:free.x,top:free.y,width:free.width,height:free.height,minHeight:0,margin:0,maxWidth:'none',flexGrow:0}:{}),
     filter:s.shadow&&node.kind==='shape'?`drop-shadow(${s.shadow.x}px ${s.shadow.y}px ${s.shadow.blur}px ${s.shadow.color})`:undefined,
 
@@ -164,10 +166,11 @@ export function Canvas({ editor, preview, width, zoom,pageId,onPageBackground }:
 
     };
 
-    if(n.kind==='icon')return <svg key={id} {...props as unknown as React.SVGProps<SVGSVGElement>} role="img" aria-label={n.name} viewBox={(n.iconViewBox??[0,0,24,24]).join(' ')} preserveAspectRatio="xMidYMid meet" style={{...props.style,border:undefined}}>{n.iconPaths?.map((d,i)=><path key={i} d={d} fillRule={n.iconPaint?.[i]?.rule??'evenodd'} strokeLinecap={n.iconPaint?.[i]?.cap??'round'} strokeLinejoin={n.iconPaint?.[i]?.join??'round'} fill={n.iconFills?.[i]?n.style.background??'#242a35':'none'} stroke={n.iconFills?.[i]?'none':n.style.background??'#242a35'} strokeWidth={n.style.borderWidth??n.iconPaint?.[i]?.width??2} strokeDasharray={n.style.lineStyle==='dashed'?'3 2':n.style.lineStyle==='dotted'?'.1 2':undefined}/>)}</svg>;
+    if(n.kind==='icon')return <svg key={id} {...props as unknown as React.SVGProps<SVGSVGElement>} role="img" aria-label={n.name} viewBox={(n.iconViewBox??[0,0,24,24]).join(' ')} preserveAspectRatio={n.style.lineStyle?'none':'xMidYMid meet'} style={{...props.style,border:undefined}}>{n.iconPaths?.map((d,i)=><path key={i} d={d} fillRule={n.iconPaint?.[i]?.rule??'evenodd'} strokeLinecap={n.style.lineStyle&&n.style.lineStyle!=='dotted'?'butt':n.iconPaint?.[i]?.cap??'round'} strokeLinejoin={n.iconPaint?.[i]?.join??'round'} fill={n.iconFills?.[i]?n.style.background??'#242a35':'none'} stroke={n.iconFills?.[i]?'none':n.style.background??'#242a35'} vectorEffect={n.style.lineStyle?'non-scaling-stroke':undefined} strokeWidth={n.style.borderWidth??n.iconPaint?.[i]?.width??2} strokeDasharray={n.style.lineStyle==='dashed'?'3 2':n.style.lineStyle==='dotted'?'.1 2':undefined}/>)}</svg>;
 
     if(n.kind==='shape'&&n.geometry)return <ShapeVector key={id} node={n} props={props as unknown as React.SVGProps<SVGSVGElement>}/>;
 
+    if(n.control)return <FunctionalControl key={id} node={n} preview={preview} props={props} editable={!n.locked&&!parent?.locked&&!project.nodes[rootId].locked} onCommitText={text=>{const control=n.control!;editor.run({type:'update',id,patch:{control:control.type==='search'?{...control,placeholder:text}:control.defaultValue?{...control,options:control.options.map(v=>v===control.defaultValue?text:v),defaultValue:text}:{...control,label:text}}});}}/>;
     if(n.button)return <SemanticButton key={id} node={n} preview={preview} editingState={selected===id?editor.buttonState:'default'} props={props} onNavigate={(type,target)=>{const page=project.pages.find(p=>p.id===target);const nodeId=type==='page'?page?.rootId:target;if(page){editor.setPageId(page.id);editor.setSelected(page.rootId);}if(nodeId)document.querySelector(`[data-node-id="${nodeId}"]`)?.scrollIntoView({block:'start',behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});}}>{n.children.map(child=>renderNode(child,n))}</SemanticButton>;
     if (n.kind === 'image') return <img key={id} {...props} src={n.assetId ? urls[n.assetId] : undefined} alt={n.alt ?? ''} draggable={false} />;
 

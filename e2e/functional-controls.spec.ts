@@ -1,0 +1,16 @@
+import {test,expect} from '@playwright/test';
+test('Buttons library offers one customizable button and functional search/dropdown controls',async({page})=>{
+ await page.goto('/');await page.getByRole('button',{name:'Elements library',exact:true}).click();await page.getByRole('button',{name:'Buttons',exact:true}).click();
+ await expect(page.locator('#elements-Buttons .element-grid button')).toHaveCount(3);await page.getByRole('button',{name:'Insert Button',exact:true}).click();
+ await page.getByLabel('Text-only button',{exact:true}).check();await page.getByLabel('Button text alignment',{exact:true}).selectOption('right');
+ const button=page.getByTestId('artboard').locator('.semantic-button');await expect(button).toHaveCSS('background-color','rgba(0, 0, 0, 0)');await expect(button.locator('p')).toHaveCSS('text-align','right');
+ await page.getByRole('button',{name:'Insert Search bar',exact:true}).click();await page.getByTestId('artboard').locator('[data-control=search]').dblclick();await page.keyboard.type('Find text');await page.getByLabel('Position X',{exact:true}).click();await expect(page.getByLabel('Search placeholder',{exact:true})).toHaveValue('Find text');await page.getByLabel('Position X',{exact:true}).fill('250');await page.getByLabel('Position X',{exact:true}).press('Enter');await page.getByRole('button',{name:'Insert Dropdown',exact:true}).click();await page.getByTestId('artboard').locator('[data-control=dropdown]').dblclick();await page.keyboard.type('Pick a value');await page.getByLabel('Position X',{exact:true}).click();await expect(page.getByLabel('Control label',{exact:true})).toHaveValue('Pick a value');await page.getByLabel('Position X',{exact:true}).fill('600');await page.getByLabel('Position X',{exact:true}).press('Enter');
+ await page.getByRole('button',{name:'Preview',exact:true}).click();
+ await page.getByRole('searchbox',{name:'Search this page',exact:true}).fill('Continue');await page.getByRole('button',{name:'Search page',exact:true}).click();await expect(page.getByRole('status').filter({hasText:'1 match'})).toBeVisible();
+ await page.getByRole('combobox',{name:'Pick a value',exact:true}).selectOption('Option 2');await expect(page.getByRole('combobox',{name:'Pick a value',exact:true})).toHaveValue('Option 2');
+ await button.hover();await expect(button).toHaveCSS('background-color','rgba(0, 0, 0, 0)');
+});
+test('solid line fills the full width of its resize box',async({page})=>{
+ await page.goto('/');await page.getByRole('button',{name:'Elements library',exact:true}).click();await page.getByRole('button',{name:'Insert Solid line',exact:true}).click();
+ const line=page.getByTestId('artboard').locator('[data-kind="icon"]'),box=(await line.boundingBox())!;const endpoints=await line.locator('path').evaluate(el=>{const p=el as SVGPathElement,m=p.getScreenCTM()!,a=p.getPointAtLength(0),b=p.getPointAtLength(p.getTotalLength());return {start:new DOMPoint(a.x,a.y).matrixTransform(m).x,end:new DOMPoint(b.x,b.y).matrixTransform(m).x};});expect(endpoints.end-endpoints.start).toBeCloseTo(box.width,0);await expect(page.locator('.selection-resize-overlay .handle-nw')).toHaveCount(0);await expect(page.getByRole('button',{name:'Resize e',exact:true})).toHaveCount(1);
+});

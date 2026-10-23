@@ -4,13 +4,14 @@ import {BUNDLED_ICONS} from './iconCatalog';
 import type {Point} from './shapes';
 export interface Preset{ id:string;name:string;category:string;tags:string[];kind:DesignNode['kind'] }
 const shapeNames:Record<string,string>={rectangle:'Rectangle',roundedRectangle:'Rounded rectangle',ellipse:'Circle',triangle:'Triangle',rightTriangle:'Right triangle',diamond:'Diamond',pentagon:'Pentagon',hexagon:'Hexagon',octagon:'Octagon',star:'Star',star4:'Four-point star',heart:'Heart',chevron:'Chevron',trapezoid:'Trapezoid',parallelogram:'Parallelogram',cross:'Cross',arrowShape:'Block arrow',line:'Solid line',dashedLine:'Dashed line',dottedLine:'Dotted line'};
-const buttonNames:Record<string,string>={solidButton:'Solid button',outlineButton:'Outlined button',roundedButton:'Rounded button',pillButton:'Pill button',arrowButton:'Arrow button',iconButton:'Icon button',shadowButton:'Shadow button',compactButton:'Compact button',gradientButton:'Gradient button',circleButton:'Circle icon button',iconOutlineButton:'Icon outline button',linkButton:'Link-style button'};
+const buttonNames:Record<string,string>={solidButton:'Button',outlineButton:'Outlined button',roundedButton:'Rounded button',pillButton:'Pill button',arrowButton:'Arrow button',iconButton:'Icon button',shadowButton:'Shadow button',compactButton:'Compact button',gradientButton:'Gradient button',circleButton:'Circle icon button',iconOutlineButton:'Icon outline button',linkButton:'Link-style button'};
 const textNames:Record<string,string>={heading:'Heading',subheading:'Subheading',paragraph:'Paragraph',caption:'Caption',quote:'Quote',label:'Text label'};
 const layoutNames:Record<string,string>={row:'Row',column:'Column',section:'Section',twoColumns:'Two columns',threeColumns:'Three columns'};
 const cardNames:Record<string,string>={contentCard:'Content card',imageCard:'Image card',statCard:'Statistic card',profileCard:'Profile card'};
 const sectionNames:Record<string,string>={hero:'Hero section',features:'Feature section',pricing:'Pricing section',testimonial:'Testimonial',callToAction:'Call to action',footer:'Footer'};
 const list=(names:Record<string,string>,category:string,kind:DesignNode['kind']):Preset[]=>Object.entries(names).map(([id,name])=>({id,name,category,kind,tags:[id.toLowerCase(),name.toLowerCase(),category.toLowerCase()]}));
-export const PRESETS:Preset[]=[...list(shapeNames,'Shapes','shape'),...list(buttonNames,'Buttons','container'),...BUNDLED_ICONS.map(icon=>({id:`icon-${icon.id}`,name:icon.name,category:'Icons',kind:'icon' as const,tags:[...icon.tags,icon.pack,icon.style]})),...list(textNames,'Text','text'),...list(layoutNames,'Layout','container'),...list(cardNames,'Cards','container'),...list(sectionNames,'Sections','container')];
+export const PRESETS:Preset[]=[...list(shapeNames,'Shapes','shape'),...list(buttonNames,'Buttons','container'),...list({searchBar:'Search bar',dropdown:'Dropdown'},'Buttons','container'),...BUNDLED_ICONS.map(icon=>({id:`icon-${icon.id}`,name:icon.name,category:'Icons',kind:'icon' as const,tags:[...icon.tags,icon.pack,icon.style]})),...list(textNames,'Text','text'),...list(layoutNames,'Layout','container'),...list(cardNames,'Cards','container'),...list(sectionNames,'Sections','container')];
+export const LIBRARY_PRESETS=PRESETS.filter(p=>p.category!=='Buttons'||['solidButton','searchBar','dropdown'].includes(p.id));
 export const PRESET_IDS=PRESETS.map(p=>p.id);
 function polygon(id:string):Point[]{
  const regular=(n:number,star=false):Point[]=>Array.from({length:star?n*2:n},(_,i)=>{const a=-Math.PI/2+i*Math.PI*2/(star?n*2:n),r=star&&i%2?24:60;return[60+Math.cos(a)*r,60+Math.sin(a)*r];});
@@ -39,6 +40,9 @@ export function createPreset(id:string):{root:DesignNode;nodes:Record<string,Des
  }else if(preset.category==='Text'){
   const sizes:Record<string,number>={heading:48,subheading:30,paragraph:18,caption:13,quote:26,label:12};const words:Record<string,string>={heading:'Add a heading',subheading:'A little more context',paragraph:'Add your paragraph text here.',caption:'A thoughtful caption',quote:'“Good ideas deserve a little room.”',label:'NEW COLLECTION'};
   root=text(words[id],sizes[id],id==='caption'?'#6c7480':'#242a35',id==='heading'?'700':id==='subheading'?'600':'400');root.name=preset.name;if(id==='quote')root.style={...root.style,fontFamily:'Georgia',fontStyle:'italic'};if(id==='label')root.style.letterSpacing=2;
+ }else if(id==='searchBar'||id==='dropdown'){
+  root=container(preset.name);root.style={width:280,height:44,minHeight:0,padding:0,background:'#ffffff',color:'#242a35',borderWidth:1,borderColor:'#a5afbf',borderRadius:6,fontSize:14};
+  root.control=id==='searchBar'?{type:'search',label:'Search this page',placeholder:'Search this page…'}:{type:'dropdown',label:'Choose an option',options:['Option 1','Option 2','Option 3']};
  }else if(preset.category==='Buttons'){
   const outline=['outlineButton','iconOutlineButton','linkButton'].includes(id);root=button(preset.name,outline);root.button=defaultButtonBehavior(outline);root.style.color=outline?'#3769d3':'#ffffff';root.annotations=[{id:newId(),text:'Interactive button with editable hover, pressed and focus states. Configure an optional action in Properties.'}];
   if(['pillButton','circleButton'].includes(id))root.style.borderRadius=500;if(id==='roundedButton')root.style.borderRadius=18;

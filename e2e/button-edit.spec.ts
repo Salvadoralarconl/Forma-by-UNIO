@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test';
 test('button label edits on double click and corners can be set independently',async({page})=>{
- await page.goto('/');await page.getByRole('button',{name:'Elements library',exact:true}).click();await page.getByRole('button',{name:'Buttons',exact:true}).click();await page.getByRole('button',{name:'Insert Solid button',exact:true}).click();
+ await page.goto('/');await page.getByRole('button',{name:'Elements library',exact:true}).click();await page.getByRole('button',{name:'Buttons',exact:true}).click();await page.getByRole('button',{name:'Insert Button',exact:true}).click();
  const button=page.getByTestId('artboard').locator('.semantic-button');await button.dblclick();
  const edit=page.getByRole('textbox',{name:'Edit text',exact:true});await expect(edit).toBeFocused();await page.keyboard.type('Buy now');await page.getByTestId('artboard').click({position:{x:5,y:5}});await expect(button).toHaveText('Buy now');
  await button.click();
@@ -14,7 +14,7 @@ test('button label edits on double click and corners can be set independently',a
  await page.getByRole('button',{name:'Preview',exact:true}).click();await expect(button).toHaveCSS('border-bottom-left-radius','24px');await button.dblclick();await expect(edit).toHaveCount(0);
 });
 test('button resize outline stops at the label height and remains aligned beyond the limit',async({page})=>{
- await page.goto('/');await page.getByRole('button',{name:'Elements library',exact:true}).click();await page.getByRole('button',{name:'Buttons',exact:true}).click();await page.getByRole('button',{name:'Insert Solid button',exact:true}).click();
+ await page.goto('/');await page.getByRole('button',{name:'Elements library',exact:true}).click();await page.getByRole('button',{name:'Buttons',exact:true}).click();await page.getByRole('button',{name:'Insert Button',exact:true}).click();
  const button=page.getByTestId('artboard').locator('.semantic-button'),handle=page.getByRole('button',{name:'Resize s',exact:true}),box=(await handle.boundingBox())!;
  await page.mouse.move(box.x+box.width/2,box.y+box.height/2);await page.mouse.down();await page.mouse.move(box.x+box.width/2,box.y-100);
  const first=(await button.boundingBox())!,outline=(await page.locator('.selection-resize-overlay').boundingBox())!;expect(outline.height).toBeCloseTo(first.height,0);

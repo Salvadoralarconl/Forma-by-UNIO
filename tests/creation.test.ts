@@ -6,10 +6,10 @@ import { copyFragment } from '../src/domain/clipboard';
 import { execute,createHistory,undo } from '../src/domain/history';
 import { encodeProject,decodeProject } from '../src/persistence/archive';
 describe('expanded creation library',()=>{
-  it('round trips all 589 local presets without dangling children',()=>{
-    expect(PRESETS).toHaveLength(589);let p=createProject('Library');const root=p.pages[0].rootId;
+  it('round trips all 591 local presets without dangling children',()=>{
+    expect(PRESETS).toHaveLength(591);let p=createProject('Library');const root=p.pages[0].rootId;
     for(const preset of PRESETS){const built=createPreset(preset.id);expect(built.nodes[built.root.id]).toBeTruthy();Object.assign(p.nodes,built.nodes);p.nodes[root].children.push(built.root.id);}
-    p=applyCommand(p,{type:'update',id:root,patch:{name:'Catalog'}});const restored=decodeProject(encodeProject(p));expect(restored.nodes[root].children).toHaveLength(589);expect(validateProject(restored).name).toBe('Library');
+    p=applyCommand(p,{type:'update',id:root,patch:{name:'Catalog'}});const restored=decodeProject(encodeProject(p));expect(restored.nodes[root].children).toHaveLength(591);expect(validateProject(restored).name).toBe('Library');
   });
   it('inserts every preset through the real command on a fresh small project',()=>{for(const preset of PRESETS){const p=createProject('Insertion'),root=p.pages[0].rootId;const next=applyCommand(p,{type:'add',kind:preset.kind,parentId:root,preset:preset.id});expect(next.nodes[root].children).toHaveLength(1);expect(validateProject(next).nodes[next.nodes[root].children[0]]).toBeTruthy();}});
   it('copies nested image content with fresh node IDs, preserves assets and undoes paste as one command',()=>{

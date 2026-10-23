@@ -47,6 +47,7 @@ export function nodeStyle(node: DesignNode,parent?:DesignNode): CSSProperties {
 
     boxShadow:s.shadow&&node.kind!=='shape'?`${s.shadow.x}px ${s.shadow.y}px ${s.shadow.blur}px ${s.shadow.spread??0}px ${s.shadow.color}`:undefined,
 
+    ...(node.button?.textOnly?{background:'transparent',border:undefined,boxShadow:undefined}:{}),
     ...(free?{...(node.button?{padding:0}:{}),position:'absolute',left:free.x,top:free.y,width:free.width,height:free.height,minHeight:0,margin:0,maxWidth:'none',flexGrow:0}:{}),
     filter:s.shadow&&node.kind==='shape'?`drop-shadow(${s.shadow.x}px ${s.shadow.y}px ${s.shadow.blur}px ${s.shadow.color})`:undefined,
 
