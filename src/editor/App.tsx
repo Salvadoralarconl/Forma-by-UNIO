@@ -21,6 +21,7 @@ import {ApplicationMenus} from './ApplicationMenus';
 import { Elements } from './Elements';
 
 import { Dock } from './Dock';
+import {FloatingPanels} from './FloatingPanels';
 
 import { PANEL_IDS,PANEL_NAMES,useWorkspace } from './workspace';
 
@@ -195,6 +196,7 @@ export function App({ platform = defaultPlatform, initialProject }: { platform?:
       </section>
 
       {!preview&&<Dock side="right" controller={workspaceController}>{dockContent}</Dock>}
+      {!preview&&<FloatingPanels controller={workspaceController}>{dockContent}</FloatingPanels>}
 
     </main>
 

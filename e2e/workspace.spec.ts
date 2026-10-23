@@ -21,7 +21,7 @@ test('Elements, editable shapes, actual union and dock tabs survive project roun
   const downloadPromise=page.waitForEvent('download');await page.getByRole('button',{name:'Save project',exact:true}).click();const file=info.outputPath('Shapes.forma');await (await downloadPromise).saveAs(file);
   const chooser=page.waitForEvent('filechooser');await page.getByRole('button',{name:'Open project',exact:true}).click();await (await chooser).setFiles(file);
   await expect(page.getByTestId('artboard').getByRole('img',{name:'Merged shape',exact:true})).toHaveCount(1);
-  await page.getByRole('button',{name:'Move Elements right',exact:true}).click();
+  await page.getByRole('tab',{name:'Elements',exact:true}).focus();await page.keyboard.press('Alt+ArrowRight');
   await expect(page.getByLabel('left panel dock',{exact:true})).toHaveCount(0);
   await expect(page.getByLabel('right panel dock',{exact:true}).getByRole('tab')).toHaveCount(3);
   await page.getByRole('tab',{name:'Properties',exact:true}).click();
