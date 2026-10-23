@@ -107,6 +107,9 @@ function useAssetUrls(project: Project) {
 export function Canvas({ editor, preview, width, zoom,pageId }: { editor: Editor; preview: boolean; width: number; zoom: number;pageId?:string }) {
 
   const { project, selected, setSelected } = editor;
+  const [showPageHeight,setShowPageHeight]=useState(false);
+  const selectionKey=editor.selectedIds.join('|');
+  useEffect(()=>{setShowPageHeight(false);},[selectionKey,editor.pageId,preview]);
 
   const rootId = (project.pages.find(p => p.id === (pageId??editor.pageId)) ?? project.pages[0]).rootId;
   const visiblePages=project.pages.filter(p=>!p.archived),isFirstPage=visiblePages[0]?.rootId===rootId,isLastPage=visiblePages.at(-1)?.rootId===rootId;
@@ -192,7 +195,7 @@ export function Canvas({ editor, preview, width, zoom,pageId }: { editor: Editor
     <div className="artboard-wrap" style={{ width: width * zoom, height:pageHeight*zoom,minHeight: pageHeight * zoom }}>
 
       <div className="artboard-heading"><span>{project.pages.find(p => p.id === (pageId??editor.pageId))?.name}</span><span>{width} px</span></div>
-      {!preview&&<PageControls editor={editor} pageId={pageId??editor.pageId} zoom={zoom} height={pageHeight}/>}
+      {!preview&&<PageControls editor={editor} pageId={pageId??editor.pageId} resizing={showPageHeight} onResize={()=>setShowPageHeight(value=>!value)}/>}
 
       <div data-page-id={pageId??editor.pageId} data-testid="artboard" className="artboard" style={{ width, zoom,height:pageHeight,overflow:'hidden' }}>
 
@@ -204,7 +207,7 @@ export function Canvas({ editor, preview, width, zoom,pageId }: { editor: Editor
       </div>
 
       {!preview&&(!pageId||pageId===editor.pageId)&&<SelectionToolbar editor={editor} rootId={rootId} zoom={zoom} dragBounds={freePage?free.dragBounds:null}/>}
-      {!preview&&<PageHeightHandle editor={editor} pageId={pageId??editor.pageId} zoom={zoom} height={pageHeight}/>}
+      {!preview&&showPageHeight&&<PageHeightHandle editor={editor} pageId={pageId??editor.pageId} zoom={zoom} height={pageHeight}/>}
       {!preview && (!pageId||pageId===editor.pageId) && editor.selectedIds.length>0 && project.nodes[selected] && <div data-testid="selection-label" className="selection-caption">{project.nodes[selected].name} <span>· {project.nodes[selected].kind}</span></div>}
 
     </div>

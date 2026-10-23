@@ -16,9 +16,13 @@ test('vertical page toolbar resizes page height with one undo',async({page})=>{
  await expect(toolbar).toHaveAttribute('aria-orientation','vertical');
  expect(await toolbar.evaluate(el=>getComputedStyle(el).flexDirection)).toBe('column');
  const board=page.getByTestId('artboard').first(),before=(await board.boundingBox())!;
- const resize=toolbar.getByRole('button',{name:'Resize page height from toolbar',exact:true}),box=(await resize.boundingBox())!;
+ await expect(page.getByRole('button',{name:'Resize page height',exact:true})).toHaveCount(0);
+ await toolbar.getByRole('button',{name:'Resize page height from toolbar',exact:true}).click();
+ const resize=page.getByRole('button',{name:'Resize page height',exact:true}),box=(await resize.boundingBox())!;
  await page.mouse.move(box.x+box.width/2,box.y+box.height/2);await page.mouse.down();await page.mouse.move(box.x+box.width/2,box.y+box.height/2+60);await page.mouse.up();
  await expect.poll(async()=>Math.round((await board.boundingBox())!.height-before.height)).toBe(60);
  await page.getByRole('button',{name:'Undo',exact:true}).click();
  await expect.poll(async()=>Math.round((await board.boundingBox())!.height)).toBe(Math.round(before.height));
+ await board.click({position:{x:20,y:20}});
+ await expect(resize).toHaveCount(0);
 });
