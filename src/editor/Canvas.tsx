@@ -209,7 +209,7 @@ export function Canvas({ editor, preview, width, zoom,pageId,onPageBackground }:
         {renderNode(rootId)}
         {!preview&&freePage&&<div className="free-canvas-guides"><EqualGapGuides gaps={free.guides.gaps}/>{free.guides.x!==undefined&&<div className="snap-guide vertical" style={{left:free.guides.x,height:pageHeight}}/>}{free.guides.y!==undefined&&<div className="snap-guide horizontal" style={{top:free.guides.y,width}}/>}{free.marquee&&<div className="marquee" style={{left:free.marquee.x,top:free.marquee.y,width:free.marquee.width,height:free.marquee.height}}/>}{dropPreview&&<div className="drop-preview" style={{left:dropPreview.x,top:dropPreview.y,width:dropPreview.width,height:dropPreview.height}}/>}</div>}
 
-        {!preview&&!project.nodes[rootId].locked&&(!pageId||pageId===editor.pageId)&&(freePage?<FreeSelectionOverlay editor={editor} zoom={zoom} width={width} height={pageHeight} dragBounds={free.dragBounds}/>:<SelectionOverlay editor={editor} zoom={zoom}/>)}
+        {!preview&&!project.nodes[rootId].locked&&(!pageId||pageId===editor.pageId)&&(freePage?<FreeSelectionOverlay moveSelection={{onPointerDown:e=>{const hit=document.elementsFromPoint(e.clientX,e.clientY).map(el=>el.closest('[data-node-id]')?.getAttribute('data-node-id')).find(id=>!!id&&project.nodes[rootId].children.includes(id));free.down(e,hit??selected);},onPointerMove:free.move,onPointerUp:free.up,onPointerCancel:free.cancel,onLostPointerCapture:free.cancel,onClick:e=>e.stopPropagation()}} editor={editor} zoom={zoom} width={width} height={pageHeight} dragBounds={free.dragBounds}/>:<SelectionOverlay editor={editor} zoom={zoom}/>)}
 
       </div>
 

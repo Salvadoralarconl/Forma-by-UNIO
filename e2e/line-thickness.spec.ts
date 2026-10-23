@@ -1,0 +1,4 @@
+import {test,expect} from '@playwright/test';
+for(const name of ['Solid line','Dashed line','Dotted line'])test(name+' thickness updates stroke and supports undo',async({page})=>{
+await page.goto('/');await page.getByRole('button',{name:'Elements library',exact:true}).click();await page.getByRole('button',{name:'Insert '+name,exact:true}).click();await page.getByRole('searchbox',{name:'Search properties',exact:true}).fill('thickness');const thickness=page.getByLabel('Line thickness',{exact:true}),path=page.getByTestId('artboard').locator('[data-kind=icon] path');const before=await path.getAttribute('stroke-width');await thickness.fill('8');await thickness.press('Enter');await expect(path).toHaveAttribute('stroke-width','8');await page.getByRole('button',{name:'Undo',exact:true}).click();await expect(path).toHaveAttribute('stroke-width',before!);
+});
